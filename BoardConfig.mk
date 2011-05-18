@@ -98,3 +98,5 @@ TARGET_RECOVERY_PRE_COMMAND="echo 1 > /cache/.startrecovery; sync;"
 
 # Include aries specific stuff
 -include device/samsung/aries-common/Android.mk
+
+TARGET_OTA_ASSERT_DEVICE := aries,vibrant,vibrantmtd,SGH-T959
