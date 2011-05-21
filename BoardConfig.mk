@@ -35,6 +35,8 @@ TARGET_GLOBAL_CPPFLAGS += -mtune=cortex-a8 -mfpu=neon -mfloat-abi=softfp
 TARGET_NO_BOOTLOADER := true
 TARGET_NO_RADIOIMAGE := true
 
+BOARD_MOBILEDATA_INTERFACE_NAME = "svnet0"
+
 TARGET_PROVIDES_INIT := true
 TARGET_PROVIDES_INIT_TARGET_RC := true
 TARGET_BOARD_PLATFORM := s5pv210
@@ -50,6 +52,9 @@ USE_CAMERA_STUB := false
 ifeq ($(USE_CAMERA_STUB),false)
 BOARD_CAMERA_LIBRARIES := libcamera
 endif
+
+#GPS
+BOARD_USES_GPSSHIM := true
 
 # Bluetooth
 BOARD_HAVE_BLUETOOTH := true
