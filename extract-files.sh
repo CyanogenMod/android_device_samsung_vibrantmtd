@@ -21,15 +21,19 @@ MANUFACTURER=samsung
 mkdir -p ../../../vendor/$MANUFACTURER/$DEVICE/proprietary
 mkdir -p ../../../vendor/$MANUFACTURER/$COMMON/proprietary
 
-# galaxysmtd
+# vibrantmtd
+adb pull /system/lib/libclientgps.so ../../../vendor/$MANUFACTURER/$DEVICE/proprietary
+adb pull /system/lib/libril.so ../../../vendor/$MANUFACTURER/$DEVICE/proprietary
+adb pull /system/lib/libsecgps.so ../../../vendor/$MANUFACTURER/$DEVICE/proprietary
+adb pull /system/lib/libsecril-client.so ../../../vendor/$MANUFACTURER/$DEVICE/proprietary
+adb pull /system/lib/libsec-ril.so ../../../vendor/$MANUFACTURER/$DEVICE/proprietary
+adb pull /system/bin/rild ../../../vendor/$MANUFACTURER/$DEVICE/proprietary
+adb pull /system/bin/agpsd ../../../vendor/$MANUFACTURER/$DEVICE/proprietary
 adb pull /system/lib/libcamera.so ../../../vendor/$MANUFACTURER/$DEVICE/proprietary
+adb pull /radio/modem.bin ../../../vendor/$MANUFACTURER/$DEVICE/proprietary
 
 # aries-common
-adb pull /system/etc/gps.conf ../../../vendor/$MANUFACTURER/$COMMON/proprietary
-adb pull /system/lib/libsecril-client.so ../../../vendor/$MANUFACTURER/$COMMON/proprietary
-adb pull /system/vendor/bin/gpsd ../../../vendor/$MANUFACTURER/$COMMON/proprietary
 adb pull /system/vendor/bin/pvrsrvinit ../../../vendor/$MANUFACTURER/$COMMON/proprietary
-adb pull /system/vendor/etc/gps.xml ../../../vendor/$MANUFACTURER/$COMMON/proprietary
 adb pull /system/vendor/firmware/bcm4329.hcd ../../../vendor/$MANUFACTURER/$COMMON/proprietary
 adb pull /system/vendor/firmware/nvram_net.txt ../../../vendor/$MANUFACTURER/$COMMON/proprietary
 adb pull /system/vendor/firmware/cypress-touchkey.bin ../../../vendor/$MANUFACTURER/$COMMON/proprietary
@@ -38,7 +42,6 @@ adb pull /system/lib/egl/libGLES_android.so ../../../vendor/$MANUFACTURER/$COMMO
 adb pull /system/vendor/lib/egl/libEGL_POWERVR_SGX540_120.so ../../../vendor/$MANUFACTURER/$COMMON/proprietary
 adb pull /system/vendor/lib/egl/libGLESv1_CM_POWERVR_SGX540_120.so ../../../vendor/$MANUFACTURER/$COMMON/proprietary
 adb pull /system/vendor/lib/egl/libGLESv2_POWERVR_SGX540_120.so ../../../vendor/$MANUFACTURER/$COMMON/proprietary
-adb pull /system/vendor/lib/hw/gps.aries.so ../../../vendor/$MANUFACTURER/$COMMON/proprietary
 adb pull /system/vendor/lib/hw/gralloc.aries.so ../../../vendor/$MANUFACTURER/$COMMON/proprietary
 adb pull /system/vendor/lib/libakm.so ../../../vendor/$MANUFACTURER/$COMMON/proprietary
 adb pull /system/vendor/lib/libglslcompiler.so ../../../vendor/$MANUFACTURER/$COMMON/proprietary
@@ -46,7 +49,6 @@ adb pull /system/vendor/lib/libIMGegl.so ../../../vendor/$MANUFACTURER/$COMMON/p
 adb pull /system/vendor/lib/libpvr2d.so ../../../vendor/$MANUFACTURER/$COMMON/proprietary
 adb pull /system/vendor/lib/libpvrANDROID_WSEGL.so ../../../vendor/$MANUFACTURER/$COMMON/proprietary
 adb pull /system/vendor/lib/libPVRScopeServices.so ../../../vendor/$MANUFACTURER/$COMMON/proprietary
-adb pull /system/vendor/lib/libsec-ril.so ../../../vendor/$MANUFACTURER/$COMMON/proprietary
 adb pull /system/vendor/lib/libsrv_init.so ../../../vendor/$MANUFACTURER/$COMMON/proprietary
 adb pull /system/vendor/lib/libsrv_um.so ../../../vendor/$MANUFACTURER/$COMMON/proprietary
 adb pull /system/vendor/firmware/CE147F02.bin ../../../vendor/$MANUFACTURER/$COMMON/proprietary
@@ -99,12 +101,24 @@ adb pull /system/firmware/CE147F03.bin ../../../vendor/$MANUFACTURER/$COMMON/pro
 
 # Prebuilt libraries that are needed to build open-source libraries
 PRODUCT_COPY_FILES := \\
-    vendor/__MANUFACTURER__/__DEVICE__/proprietary/libcamera.so:obj/lib/libcamera.so
+    vendor/__MANUFACTURER__/__DEVICE__/proprietary/libcamera.so:obj/lib/libcamera.so \\
+    vendor/__MANUFACTURER__/__DEVICE__/proprietary/libclientgps.so:obj/lib/libclientgps.so \\
+    vendor/__MANUFACTURER__/__DEVICE__/proprietary/libril.so:obj/lib/libril.so \\
+    vendor/__MANUFACTURER__/__DEVICE__/proprietary/libsecgps.so:obj/lib/libsecgps.so \\
+    vendor/__MANUFACTURER__/__DEVICE__/proprietary/libsecril-client.so:obj/lib/libsecril-client.so
 
 
-# All the blobs necessary for vibrantmtd
+# All the blobs necessary for galaxys devices
 PRODUCT_COPY_FILES += \\
+    vendor/__MANUFACTURER__/__DEVICE__/proprietary/libclientgps.so:system/lib/libclientgps.so \\
+    vendor/__MANUFACTURER__/__DEVICE__/proprietary/libril.so:system/lib/libril.so \\
+    vendor/__MANUFACTURER__/__DEVICE__/proprietary/libsecgps.so:system/lib/libsecgps.so \\
+    vendor/__MANUFACTURER__/__DEVICE__/proprietary/libsecril-client.so:system/lib/libsecril-client.so \\
+    vendor/__MANUFACTURER__/__DEVICE__/proprietary/libsec-ril.so:system/lib/libsec-ril.so \\
+    vendor/__MANUFACTURER__/__DEVICE__/proprietary/rild:system/bin/rild \\
+    vendor/__MANUFACTURER__/__DEVICE__/proprietary/agpsd:system/bin/agpsd \\
     vendor/__MANUFACTURER__/__DEVICE__/proprietary/libcamera.so:system/lib/libcamera.so
+
 EOF
 
 
@@ -123,26 +137,17 @@ EOF
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Prebuilt libraries that are needed to build open-source libraries
-PRODUCT_COPY_FILES := \\
-    vendor/__MANUFACTURER__/__COMMON__/proprietary/libsecril-client.so:obj/lib/libsecril-client.so
-
 # All the blobs necessary for galaxys devices
 PRODUCT_COPY_FILES += \\
-    vendor/__MANUFACTURER__/__COMMON__/proprietary/gps.conf:system/etc/gps.conf \\
-    vendor/__MANUFACTURER__/__COMMON__/proprietary/libsecril-client.so:system/lib/libsecril-client.so \\
-    vendor/__MANUFACTURER__/__COMMON__/proprietary/gpsd:system/vendor/bin/gpsd \\
     vendor/__MANUFACTURER__/__COMMON__/proprietary/pvrsrvinit:system/vendor/bin/pvrsrvinit \\
-    vendor/__MANUFACTURER__/__COMMON__/proprietary/gps.xml:system/vendor/etc/gps.xml \\
     vendor/__MANUFACTURER__/__COMMON__/proprietary/bcm4329.hcd:system/vendor/firmware/bcm4329.hcd \\
     vendor/__MANUFACTURER__/__COMMON__/proprietary/nvram_net.txt:system/vendor/firmware/nvram_net.txt \\
     vendor/__MANUFACTURER__/__COMMON__/proprietary/cypress-touchkey.bin:system/vendor/firmware/cypress-touchkey.bin \\
-    vendor/__MANUFACTURER__/__COMMON__/proprietary/samsung_mfc_fw.bin:system/vendor/firmware/samsung_mfc_fw.bin \\
+    vendor/__MANUFACTURER__/__COMMON__/proprietary/__MANUFACTURER___mfc_fw.bin:system/vendor/firmware/__MANUFACTURER___mfc_fw.bin \\
     vendor/__MANUFACTURER__/__COMMON__/proprietary/libGLES_android.so:system/lib/egl/libGLES_android.so \\
     vendor/__MANUFACTURER__/__COMMON__/proprietary/libEGL_POWERVR_SGX540_120.so:system/vendor/lib/egl/libEGL_POWERVR_SGX540_120.so \\
     vendor/__MANUFACTURER__/__COMMON__/proprietary/libGLESv1_CM_POWERVR_SGX540_120.so:system/vendor/lib/egl/libGLESv1_CM_POWERVR_SGX540_120.so \\
-    vendor/samsung/__COMMON__/proprietary/libGLESv2_POWERVR_SGX540_120.so:system/vendor/lib/egl/libGLESv2_POWERVR_SGX540_120.so \\
-    vendor/__MANUFACTURER__/__COMMON__/proprietary/gps.aries.so:system/vendor/lib/hw/gps.aries.so \\
+    vendor/__MANUFACTURER__/__COMMON__/proprietary/libGLESv2_POWERVR_SGX540_120.so:system/vendor/lib/egl/libGLESv2_POWERVR_SGX540_120.so \\
     vendor/__MANUFACTURER__/__COMMON__/proprietary/gralloc.aries.so:system/vendor/lib/hw/gralloc.aries.so \\
     vendor/__MANUFACTURER__/__COMMON__/proprietary/libakm.so:system/vendor/lib/libakm.so \\
     vendor/__MANUFACTURER__/__COMMON__/proprietary/libglslcompiler.so:system/vendor/lib/libglslcompiler.so \\
@@ -150,7 +155,6 @@ PRODUCT_COPY_FILES += \\
     vendor/__MANUFACTURER__/__COMMON__/proprietary/libpvr2d.so:system/vendor/lib/libpvr2d.so \\
     vendor/__MANUFACTURER__/__COMMON__/proprietary/libpvrANDROID_WSEGL.so:system/vendor/lib/libpvrANDROID_WSEGL.so \\
     vendor/__MANUFACTURER__/__COMMON__/proprietary/libPVRScopeServices.so:system/vendor/lib/libPVRScopeServices.so \\
-    vendor/__MANUFACTURER__/__COMMON__/proprietary/libsec-ril.so:system/vendor/lib/libsec-ril.so \\
     vendor/__MANUFACTURER__/__COMMON__/proprietary/libsrv_init.so:system/vendor/lib/libsrv_init.so \\
     vendor/__MANUFACTURER__/__COMMON__/proprietary/libsrv_um.so:system/vendor/lib/libsrv_um.so \\
     vendor/__MANUFACTURER__/__COMMON__/proprietary/CE147F02.bin:system/vendor/firmware/CE147F02.bin \\
