@@ -54,7 +54,7 @@ BOARD_CAMERA_LIBRARIES := libcamera
 endif
 
 #GPS
-BOARD_USES_GPSSHIM := true
+#BOARD_USES_GPSSHIM := true
 
 # Bluetooth
 BOARD_HAVE_BLUETOOTH := true
