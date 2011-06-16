@@ -86,7 +86,6 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
 	lights.aries \
 	overlay.aries \
-	gps.aries \
 	sensors.aries
 
 # Libs
