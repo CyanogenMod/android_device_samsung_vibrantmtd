@@ -24,11 +24,10 @@ mkdir -p ../../../vendor/$MANUFACTURER/$COMMON/proprietary
 # vibrantmtd
 adb pull /system/lib/libclientgps.so ../../../vendor/$MANUFACTURER/$DEVICE/proprietary
 adb pull /system/lib/libril.so ../../../vendor/$MANUFACTURER/$DEVICE/proprietary
-adb pull /system/lib/libsecgps.so ../../../vendor/$MANUFACTURER/$DEVICE/proprietary
 adb pull /system/lib/libsecril-client.so ../../../vendor/$MANUFACTURER/$DEVICE/proprietary
 adb pull /system/lib/libsec-ril.so ../../../vendor/$MANUFACTURER/$DEVICE/proprietary
 adb pull /system/bin/rild ../../../vendor/$MANUFACTURER/$DEVICE/proprietary
-adb pull /system/bin/agpsd ../../../vendor/$MANUFACTURER/$DEVICE/proprietary
+adb pull /system/bin/gpsd ../../../vendor/$MANUFACTURER/$DEVICE/proprietary/agpsd
 adb pull /system/lib/libcamera.so ../../../vendor/$MANUFACTURER/$DEVICE/proprietary
 adb pull /radio/modem.bin ../../../vendor/$MANUFACTURER/$DEVICE/proprietary
 
