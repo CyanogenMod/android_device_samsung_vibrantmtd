@@ -80,7 +80,6 @@ BOARD_USES_LIBSECRIL_STUB := false
 
 BOARD_NO_PAGE_FLIPPING := false
 BOARD_NO_32BPP := false
-
 EOF
 
 

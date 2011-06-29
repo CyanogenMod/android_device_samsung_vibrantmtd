@@ -24,11 +24,10 @@ mkdir -p ../../../vendor/$MANUFACTURER/$COMMON/proprietary
 # vibrantmtd
 adb pull /system/lib/libclientgps.so ../../../vendor/$MANUFACTURER/$DEVICE/proprietary
 adb pull /system/lib/libril.so ../../../vendor/$MANUFACTURER/$DEVICE/proprietary
-adb pull /system/lib/libsecgps.so ../../../vendor/$MANUFACTURER/$DEVICE/proprietary
 adb pull /system/lib/libsecril-client.so ../../../vendor/$MANUFACTURER/$DEVICE/proprietary
 adb pull /system/lib/libsec-ril.so ../../../vendor/$MANUFACTURER/$DEVICE/proprietary
 adb pull /system/bin/rild ../../../vendor/$MANUFACTURER/$DEVICE/proprietary
-adb pull /system/bin/agpsd ../../../vendor/$MANUFACTURER/$DEVICE/proprietary
+adb pull /system/vendor/bin/gpsd ../../../vendor/$MANUFACTURER/$DEVICE/proprietary/agpsd
 adb pull /system/lib/libcamera.so ../../../vendor/$MANUFACTURER/$DEVICE/proprietary
 adb pull /radio/modem.bin ../../../vendor/$MANUFACTURER/$DEVICE/proprietary
 
@@ -102,9 +101,7 @@ adb pull /system/firmware/CE147F03.bin ../../../vendor/$MANUFACTURER/$COMMON/pro
 # Prebuilt libraries that are needed to build open-source libraries
 PRODUCT_COPY_FILES := \\
     vendor/__MANUFACTURER__/__DEVICE__/proprietary/libcamera.so:obj/lib/libcamera.so \\
-    vendor/__MANUFACTURER__/__DEVICE__/proprietary/libclientgps.so:obj/lib/libclientgps.so \\
     vendor/__MANUFACTURER__/__DEVICE__/proprietary/libril.so:obj/lib/libril.so \\
-    vendor/__MANUFACTURER__/__DEVICE__/proprietary/libsecgps.so:obj/lib/libsecgps.so \\
     vendor/__MANUFACTURER__/__DEVICE__/proprietary/libsecril-client.so:obj/lib/libsecril-client.so
 
 
@@ -112,13 +109,12 @@ PRODUCT_COPY_FILES := \\
 PRODUCT_COPY_FILES += \\
     vendor/__MANUFACTURER__/__DEVICE__/proprietary/libclientgps.so:system/lib/libclientgps.so \\
     vendor/__MANUFACTURER__/__DEVICE__/proprietary/libril.so:system/lib/libril.so \\
-    vendor/__MANUFACTURER__/__DEVICE__/proprietary/libsecgps.so:system/lib/libsecgps.so \\
     vendor/__MANUFACTURER__/__DEVICE__/proprietary/libsecril-client.so:system/lib/libsecril-client.so \\
     vendor/__MANUFACTURER__/__DEVICE__/proprietary/libsec-ril.so:system/lib/libsec-ril.so \\
+    vendor/__MANUFACTURER__/__DEVICE__/proprietary/gps.aries.so:system/vendor/lib/hw/gps.aries.so \\
     vendor/__MANUFACTURER__/__DEVICE__/proprietary/rild:system/bin/rild \\
-    vendor/__MANUFACTURER__/__DEVICE__/proprietary/agpsd:system/bin/agpsd \\
+    vendor/__MANUFACTURER__/__DEVICE__/proprietary/agpsd:system/vendor/bin/gpsd \\
     vendor/__MANUFACTURER__/__DEVICE__/proprietary/libcamera.so:system/lib/libcamera.so
-
 EOF
 
 
@@ -158,11 +154,16 @@ PRODUCT_COPY_FILES += \\
     vendor/__MANUFACTURER__/__COMMON__/proprietary/libsrv_init.so:system/vendor/lib/libsrv_init.so \\
     vendor/__MANUFACTURER__/__COMMON__/proprietary/libsrv_um.so:system/vendor/lib/libsrv_um.so \\
     vendor/__MANUFACTURER__/__COMMON__/proprietary/CE147F02.bin:system/vendor/firmware/CE147F02.bin \\
-    vendor/__MANUFACTURER__/__COMMON__/proprietary/libusc.so:system/vendor/lib/libusc.so \\
+    vendor/__MANUFACTURER__/__COMMON__/proprietary/libusc.so:system/vendor/lib/libusc.so
+
+# fascinatemtd uses older sensor drivers
+ifndef TARGET_USES_OLD_LIBSENSORS_HAL
+PRODUCT_COPY_FILES += \\
     vendor/__MANUFACTURER__/__COMMON__/proprietary/libsensor_yamaha_test.so:system/vendor/lib/libsensor_yamaha_test.so \\
     vendor/__MANUFACTURER__/__COMMON__/proprietary/libsensorservice.so:system/vendor/lib/libsensorservice.so \\
     vendor/__MANUFACTURER__/__COMMON__/proprietary/orientationd:system/vendor/bin/orientationd \\
     vendor/__MANUFACTURER__/__COMMON__/proprietary/geomagneticd:system/vendor/bin/geomagneticd
+endif
 
 # camera and tvout
 PRODUCT_COPY_FILES += \\
