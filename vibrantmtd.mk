@@ -101,6 +101,9 @@ PRODUCT_COPY_FILES += \
 PRODUCT_COPY_FILES += \
         vendor/cyanogen/prebuilt/common/etc/apns-conf.xml:system/etc/apns-conf.xml
 
+# GPS config file
+$(call inherit-product, device/common/gps/gps_us_supl.mk)
+
 # These are the hardware-specific features
 PRODUCT_COPY_FILES += \
 	frameworks/base/data/etc/handheld_core_hardware.xml:system/etc/permissions/handheld_core_hardware.xml \
