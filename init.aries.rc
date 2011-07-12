@@ -33,46 +33,47 @@ on boot
 
 # change permission for uart_switch
     chown radio radio /sys/class/sec/uart_switch/UART_SEL/value
-    chown compass root /sys/class/input/input3/distortion
-    chown compass root /sys/class/input/input3/offsets
-    chown compass root /sys/class/input/input3/shape
-    chown compass root /sys/class/input/input3/threshold
     chmod 660 /sys/class/sec/uart_switch/UART_SEL/value
 
 # change permission for compass
+    chown compass input /dev/input/input3
     chown compass input /sys/class/input/input3/offsets
     chown compass input /sys/class/input/input3/shape
     chown compass input /sys/class/input/input3/distortion
     chown compass input /sys/class/input/input3/threshold
 
-# +STE GPS Daemon
-# create data/gps for GPS demon
-# GPS_CHIPSET_STE_GNS7560
+# Permissions for GPS Daemon
     chown gps gps /dev/s3c2410_serial1
-    chmod 660 /dev/s3c2410_serial1
+    chmod 660     /dev/s3c2410_serial1
+
+    chown gps gps /sys/class/sec/gps/GPS_PWR_EN/value
+    chmod 664     /sys/class/sec/gps/GPS_PWR_EN/value
+
+    chown gps gps /sys/class/sec/gps/GPS_nRST/value
+    chmod 664     /sys/class/sec/gps/GPS_nRST/value
+
+# create data/gps for GPS demon
+#
     mkdir /data/gps 771 gps system
     chown gps system /data/gps
-    chown gps gps /sys/class/sec/gps/GPS_PWR_EN/value
-    chmod 664 /sys/class/sec/gps/GPS_PWR_EN/value
-    chown gps gps /sys/class/sec/gps/GPS_nRST/value
-    chmod 664 /sys/class/sec/gps/GPS_nRST/value
-# not sure if these are needed or not, but it cant hurt...
+
+# Not sure if all of these are needed or not, but it cant hurt...
     chown gps gps /data/CGPS_LOG.txt
-    chmod 0770 /data/CGPS_LOG.txt
+    chmod 0770    /data/CGPS_LOG.txt
     chown gps gps /data/EVENT_LOG.txt
-    chmod 0770 /data/EVENT_LOG.txt
+    chmod 0770    /data/EVENT_LOG.txt
     chown gps gps /data/GNB_DEBUG.txt
-    chmod 0770 /data/GNB_DEBUG.txt
+    chmod 0770    /data/GNB_DEBUG.txt
     chown gps gps /data/GPS_NV_Data.bin
-    chmod 0770 /data/GPS_NV_Data.bin
+    chmod 0770    /data/GPS_NV_Data.bin
     chown gps gps /data/GPS_UTC_Calib.bin
-    chmod 0770 /data/GPS_UTC_Calib.bin
+    chmod 0770    /data/GPS_UTC_Calib.bin
     chown gps gps /data/HALGPS_conf.cfg
-    chmod 0770 /data/HALGPS_conf.cfg
+    chmod 0770    /data/HALGPS_conf.cfg
     chown gps gps /data/NAV_DEBUG.txt
-    chmod 0770 /data/NAV_DEBUG.txt
+    chmod 0770    /data/NAV_DEBUG.txt
     chown gps gps /data/NMEA_DEBUG.txt
-    chmod 0770 /data/NMEA_DEBUG.txt
+    chmod 0770    /data/NMEA_DEBUG.txt
 
 on fs
     mkdir /radio 0775 radio radio
@@ -215,9 +216,8 @@ service pvrsrvinit /system/vendor/bin/pvrsrvinit
     group root
     oneshot
 
-# +STE GPS Daemon
-# GPS_CHIPSET_STE_GNS7560 (and GPS_CHIPSET_STE_CG2900 ?)
-service gpsd /system/vendor/bin/gpsd
+# GPS Daemon
+service gpsd /system/vendor/bin/launch_gps.sh
      socket gps seqpacket 0660 gps system
      user gps
      group gps system inet
