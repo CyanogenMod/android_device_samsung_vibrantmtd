@@ -26,8 +26,6 @@
 #include <hardware_legacy/AudioHardwareBase.h>
 #include <media/mediarecorder.h>
 
-//#include "secril-client.h"
-
 extern "C" {
     struct pcm;
     struct mixer;
@@ -67,8 +65,6 @@ namespace android {
 // Default audio input buffer size in bytes (8kHz mono)
 #define AUDIO_HW_IN_PERIOD_BYTES ((AUDIO_HW_IN_PERIOD_SZ*sizeof(int16_t))/8)
 
-//#define INPUT_SOURCE_KEY "Input Source"
-//#define VIOCE_MEMO_PATH_KEY "Voice Memo Path"
 
 class AudioHardware : public AudioHardwareBase
 {
@@ -116,10 +112,8 @@ public:
             const char *getOutputRouteFromDevice(uint32_t device);
             const char *getInputRouteFromDevice(uint32_t device);
             const char *getVoiceRouteFromDevice(uint32_t device);
-  //          const char *getMicPathFromDevice();
 
             status_t setIncallPath_l(uint32_t device);
-            status_t setVoiceMemoPath_l(String8 path);
 
             status_t setInputSource_l(audio_source source);
 
@@ -141,6 +135,13 @@ protected:
 
 private:
 
+    enum tty_modes {
+        TTY_MODE_OFF,
+        TTY_MODE_VCO,
+        TTY_MODE_HCO,
+        TTY_MODE_FULL
+    };
+
     bool            mInit;
     bool            mMicMute;
     sp <AudioStreamOutALSA>                 mOutput;
@@ -154,21 +155,8 @@ private:
 
     audio_source    mInputSource;
     bool            mBluetoothNrec;
-/*
-    void*           mSecRilLibHandle;
-    HRilClient      mRilClient;
-    bool            mActivatedCP;
-    HRilClient      (*openClientRILD)  (void);
-    int             (*disconnectRILD)  (HRilClient);
-    int             (*closeClientRILD) (HRilClient);
-    int             (*isConnectedRILD) (HRilClient);
-    int             (*connectRILD)     (HRilClient);
-    int             (*setCallVolume)   (HRilClient, SoundType, int);
-    int             (*setCallAudioPath)(HRilClient, AudioPath);
-    int             (*setCallClockSync)(HRilClient, SoundClockCondition);
-    void            loadRILD(void);
-    status_t        connectRILDIfRequired(void);
-*/
+    int             mTTYMode;
+
     //  trace driver operations for dump
     int             mDriverOp;
 

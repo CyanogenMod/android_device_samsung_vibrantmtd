@@ -88,6 +88,7 @@ AudioHardware::AudioHardware() :
     mInCallAudioMode(false),
     mInputSource(AUDIO_SOURCE_DEFAULT),
     mBluetoothNrec(true),
+    mTTYMode(TTY_MODE_OFF),
     mDriverOp(DRV_NONE)
 {
     mInit = true;
@@ -367,6 +368,11 @@ status_t AudioHardware::setParameters(const String8& keyValuePairs)
     String8 key;
     const char BT_NREC_KEY[] = "bt_headset_nrec";
     const char BT_NREC_VALUE_ON[] = "on";
+    const char TTY_MODE_KEY[] = "tty_mode";
+    const char TTY_MODE_VALUE_OFF[] = "tty_off";
+    const char TTY_MODE_VALUE_VCO[] = "tty_vco";
+    const char TTY_MODE_VALUE_HCO[] = "tty_hco";
+    const char TTY_MODE_VALUE_FULL[] = "tty_full";
 
     key = String8(BT_NREC_KEY);
     if (param.get(key, value) == NO_ERROR) {
@@ -377,6 +383,32 @@ status_t AudioHardware::setParameters(const String8& keyValuePairs)
             LOGD("Turning noise reduction and echo cancellation off for BT "
                  "headset");
         }
+        param.remove(String8(BT_NREC_KEY));
+    }
+
+    key = String8(TTY_MODE_KEY);
+    if (param.get(key, value) == NO_ERROR) {
+        int ttyMode;
+        if (value == TTY_MODE_VALUE_OFF) {
+            ttyMode = TTY_MODE_OFF;
+        } else if (value == TTY_MODE_VALUE_VCO) {
+            ttyMode = TTY_MODE_VCO;
+        } else if (value == TTY_MODE_VALUE_HCO) {
+            ttyMode = TTY_MODE_HCO;
+        } else if (value == TTY_MODE_VALUE_FULL) {
+            ttyMode = TTY_MODE_FULL;
+        } else {
+            return BAD_VALUE;
+        }
+
+        if (ttyMode != mTTYMode) {
+            LOGV("new tty mode %d", ttyMode);
+            mTTYMode = ttyMode;
+            if (mOutput != 0 && mMode == AudioSystem::MODE_IN_CALL) {
+                setIncallPath_l(mOutput->device());
+            }
+        }
+        param.remove(String8(TTY_MODE_KEY));
     }
 
     return NO_ERROR;
@@ -459,19 +491,6 @@ status_t AudioHardware::setMasterVolume(float volume)
     // volume on top of the maximum volume that we set through the SND API.
     // return error - software mixer will handle it
 
-    if (mMixer != NULL) {
-        LOGV("setMasterVolume() getting Playback Spkr Volume control.");
-        TRACE_DRIVER_IN(DRV_MIXER_GET)
-        struct mixer_ctl *ctl= mixer_get_control(mMixer, "Playback Spkr Volume", 0);
-        TRACE_DRIVER_OUT
-        if (ctl != NULL) {
-            LOGV("setMasterVolume() set Playback Spkr Volume to %f", volume);
-            TRACE_DRIVER_IN(DRV_MIXER_SET)
-            mixer_ctl_set(ctl, volume * 100);
-            TRACE_DRIVER_OUT
-            return NO_ERROR;
-        }
-    }
     return -1;
 }
 
@@ -679,9 +698,22 @@ const char *AudioHardware::getVoiceRouteFromDevice(uint32_t device)
     case AudioSystem::DEVICE_OUT_SPEAKER:
         return "SPK";
     case AudioSystem::DEVICE_OUT_WIRED_HEADPHONE:
-        return "HP_NO_MIC";
     case AudioSystem::DEVICE_OUT_WIRED_HEADSET:
-        return "HP";
+        switch (mTTYMode) {
+        case TTY_MODE_VCO:
+            return "TTY_VCO";
+        case TTY_MODE_HCO:
+            return "TTY_HCO";
+        case TTY_MODE_FULL:
+            return "TTY_FULL";
+        case TTY_MODE_OFF:
+        default:
+            if (device == AudioSystem::DEVICE_OUT_WIRED_HEADPHONE) {
+                return "HP_NO_MIC";
+            } else {
+                return "HP";
+            }
+        }
     case AudioSystem::DEVICE_OUT_BLUETOOTH_SCO:
     case AudioSystem::DEVICE_OUT_BLUETOOTH_SCO_HEADSET:
     case AudioSystem::DEVICE_OUT_BLUETOOTH_SCO_CARKIT:
@@ -696,6 +728,7 @@ const char *AudioHardware::getInputRouteFromDevice(uint32_t device)
     if (mMicMute) {
         return "MIC OFF";
     }
+
     switch (device) {
     case AudioSystem::DEVICE_IN_BUILTIN_MIC:
         return "Main Mic";
@@ -783,6 +816,7 @@ status_t AudioHardware::setInputSource_l(audio_source source)
 
      return NO_ERROR;
 }
+
 
 //------------------------------------------------------------------------------
 //  AudioStreamOutALSA
@@ -1035,6 +1069,7 @@ bool AudioHardware::AudioStreamOutALSA::checkStandby()
 status_t AudioHardware::AudioStreamOutALSA::setParameters(const String8& keyValuePairs)
 {
     AudioParameter param = AudioParameter(keyValuePairs);
+
     status_t status = NO_ERROR;
     int device;
     LOGD("AudioStreamOutALSA::setParameters() %s", keyValuePairs.string());
@@ -1046,19 +1081,20 @@ status_t AudioHardware::AudioStreamOutALSA::setParameters(const String8& keyValu
 
         if (param.getInt(String8(AudioParameter::keyRouting), device) == NO_ERROR)
         {
-        if (device != 0) {
-            AutoMutex hwLock(mHardware->lock());
+            if (device != 0) {
+                AutoMutex hwLock(mHardware->lock());
 
-            if (mDevices != (uint32_t)device) {
-                mDevices = (uint32_t)device;
-                if (mHardware->mode() != AudioSystem::MODE_IN_CALL) {
-                    doStandby_l();
+                if (mDevices != (uint32_t)device) {
+                    mDevices = (uint32_t)device;
+
+                    if (mHardware->mode() != AudioSystem::MODE_IN_CALL) {
+                        doStandby_l();
+                    }
+                }
+                if (mHardware->mode() == AudioSystem::MODE_IN_CALL) {
+                    mHardware->setIncallPath_l(device);
                 }
             }
-            if (mHardware->mode() == AudioSystem::MODE_IN_CALL) {
-                mHardware->setIncallPath_l(device);
-            }
-        }
             param.remove(String8(AudioParameter::keyRouting));
         }
     }
@@ -1067,9 +1103,7 @@ status_t AudioHardware::AudioStreamOutALSA::setParameters(const String8& keyValu
         status = BAD_VALUE;
     }
 
-
     return status;
-
 }
 
 String8 AudioHardware::AudioStreamOutALSA::getParameters(const String8& keys)
@@ -1280,6 +1314,7 @@ ssize_t AudioHardware::AudioStreamInALSA::read(void* buffer, ssize_t bytes)
 Error:
 
     standby();
+
     // Simulate audio output timing in case of error
     usleep((((bytes * 1000) / frameSize()) * 1000) / sampleRate());
 
@@ -1364,14 +1399,15 @@ status_t AudioHardware::AudioStreamInALSA::open_l()
     }
 
     if (mHardware->mode() != AudioSystem::MODE_IN_CALL) {
-    const char *route = mHardware->getInputRouteFromDevice(mDevices);
-    LOGV("read() wakeup setting route %s", route);
-    if (mRouteCtl) {
-        TRACE_DRIVER_IN(DRV_MIXER_SEL)
-        mixer_ctl_select(mRouteCtl, route);
-        TRACE_DRIVER_OUT
+        const char *route = mHardware->getInputRouteFromDevice(mDevices);
+        LOGV("read() wakeup setting route %s", route);
+        if (mRouteCtl) {
+            TRACE_DRIVER_IN(DRV_MIXER_SEL)
+            mixer_ctl_select(mRouteCtl, route);
+            TRACE_DRIVER_OUT
+        }
     }
-}
+
     return NO_ERROR;
 }
 
@@ -1696,6 +1732,7 @@ void resample_441_320(int16_t* input, int16_t* output, int* num_samples_in, int*
             const int32_t s2 = tmp[whole + 1];
             *output++ = clip(s1 + (((s2 - s1) * (int32_t)frac) >> 15));
         }
+
     }
 
     const int samples_consumed = num_blocks * RESAMPLE_16KHZ_SAMPLES_IN;
