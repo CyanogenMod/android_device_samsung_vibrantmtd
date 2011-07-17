@@ -169,6 +169,9 @@ endif
 PRODUCT_COPY_FILES += \
         $(LOCAL_KERNEL):kernel
 
+PRODUCT_COPY_FILES += \
+	device/samsung/aries-common/updater.sh:updater.sh
+
 # See comment at the top of this file. This is where the other
 # half of the device-specific product definition file takes care
 # of the aspects that require proprietary drivers that aren't
