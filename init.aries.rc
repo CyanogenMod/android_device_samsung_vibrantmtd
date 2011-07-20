@@ -370,5 +370,19 @@ service console /system/bin/sh
     user shell
     group log
 
+## Manual download of long term orbit data
+service gpslto /system/bin/get-gps-lto
+    user system
+    #group net_raw system
+    group gps system
+    oneshot
+    disabled
+	
+## Try updating LTO whenever gpsd or wifi comes up
+on property:init.svc.wpa_supplicant=running
+    start gpslto
+on property:init.svc.gpsd=running
+    start gpslto
+
 on property:ro.secure=0
     start console
