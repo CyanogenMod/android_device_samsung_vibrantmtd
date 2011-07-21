@@ -171,6 +171,7 @@ PRODUCT_COPY_FILES += \
 
 PRODUCT_COPY_FILES += \
 	device/samsung/aries-common/updater.sh:updater.sh
+        device/samsung/get-gps-lto:/system/bin/get-gps-lto
 
 # See comment at the top of this file. This is where the other
 # half of the device-specific product definition file takes care
