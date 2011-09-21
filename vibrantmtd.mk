@@ -98,6 +98,10 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
 	bdaddr_read
 
+# Shutter sound toggle
+PRODUCT_PACKAGES += \
+	toggleshutter
+
 # Input device calibration files
 PRODUCT_COPY_FILES += \
 	device/samsung/aries-common/mxt224_ts_input.idc:system/usr/idc/mxt224_ts_input.idc
