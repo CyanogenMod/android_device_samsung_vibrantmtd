@@ -98,9 +98,10 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
 	bdaddr_read
 
-# Service Mode Secret Code
+# Device-specific packages
 PRODUCT_PACKAGES += \
-	SamsungServiceMode
+	SamsungServiceMode \
+	AriesParts
 
 # Input device calibration files
 PRODUCT_COPY_FILES += \
