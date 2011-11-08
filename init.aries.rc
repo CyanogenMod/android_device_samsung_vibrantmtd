@@ -126,6 +126,7 @@ on post-fs
     chmod 0771 /data
     chown system system /datadata
     chmod 0771 /datadata
+    symlink /datadata /data/data
 
 # create basic filesystem structure
     #mkdir /data/data 0771 system system
