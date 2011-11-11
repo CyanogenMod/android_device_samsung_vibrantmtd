@@ -116,6 +116,7 @@ on fs
 # Permissions for System Server and daemons.
     chown system system /sys/class/backlight/s5p_bl/brightness
 
+    symlink /datadata /data/data
 on post-fs
 
     # remove /sbin/sh so that "adb install" can work properly
@@ -130,7 +131,6 @@ on post-fs
 # create basic filesystem structure
     #mkdir /data/data 0771 system system
     # symlink /data/data to /datadata for performance
-    symlink /datadata /data/data
 
     #symlinks for samsung RIL
     symlink /radio/modem.bin /dev/block/bml12
