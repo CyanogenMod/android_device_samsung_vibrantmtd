@@ -55,8 +55,6 @@ endif
 #GPS
 #BOARD_USES_GPSSHIM := true
 
-TARGET_PROVIDES_LIBAUDIO := true
-
 # Bluetooth
 BOARD_HAVE_BLUETOOTH := true
 BOARD_HAVE_BLUETOOTH_BCM := true
