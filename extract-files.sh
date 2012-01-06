@@ -70,6 +70,7 @@ adb pull /system/lib/libseccamera.so ../../../vendor/$MANUFACTURER/$COMMON/propr
 adb pull /system/lib/libseccameraadaptor.so ../../../vendor/$MANUFACTURER/$COMMON/proprietary
 adb pull /system/lib/libsecjpegencoder.so ../../../vendor/$MANUFACTURER/$COMMON/proprietary
 adb pull /system/lib/libtvout.so ../../../vendor/$MANUFACTURER/$COMMON/proprietary
+adb pull /system/lib/libtvout_jni.so ../../../vendor/$MANUFACTURER/$COMMON/proprietary
 adb pull /system/lib/lib_tvoutengine.so ../../../vendor/$MANUFACTURER/$COMMON/proprietary
 adb pull /system/lib/libtvoutfimc.so ../../../vendor/$MANUFACTURER/$COMMON/proprietary
 adb pull /system/lib/libtvouthdmi.so ../../../vendor/$MANUFACTURER/$COMMON/proprietary
@@ -203,6 +204,7 @@ PRODUCT_COPY_FILES += \\
     vendor/__MANUFACTURER__/__COMMON__/proprietary/libseccameraadaptor.so:system/lib/libseccameraadaptor.so \\
     vendor/__MANUFACTURER__/__COMMON__/proprietary/libsecjpegencoder.so:system/lib/libsecjpegencoder.so \\
     vendor/__MANUFACTURER__/__COMMON__/proprietary/libtvout.so:system/lib/libtvout.so \\
+    vendor/__MANUFACTURER__/__COMMON__/proprietary/libtvout_jni.so:system/lib/libtvout_jni.so \\
     vendor/__MANUFACTURER__/__COMMON__/proprietary/lib_tvoutengine.so:system/lib/lib_tvoutengine.so \\
     vendor/__MANUFACTURER__/__COMMON__/proprietary/libtvoutfimc.so:system/lib/libtvoutfimc.so \\
     vendor/__MANUFACTURER__/__COMMON__/proprietary/libtvouthdmi.so:system/lib/libtvouthdmi.so \\
