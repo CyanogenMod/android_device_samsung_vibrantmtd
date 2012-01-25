@@ -100,7 +100,8 @@ PRODUCT_PACKAGES += \
 # Device-specific packages
 PRODUCT_PACKAGES += \
 	SamsungServiceMode \
-	AriesParts
+	AriesParts \
+	tvouthack
 
 # Input device calibration files
 PRODUCT_COPY_FILES += \
