@@ -17,86 +17,13 @@
 # Product-specific compile-time definitions.
 #
 
-# Set this up here so that BoardVendorConfig.mk can override it
-BOARD_USES_GENERIC_AUDIO := false
-
-BOARD_USES_LIBSECRIL_STUB := true
-
-# Use the non-open-source parts, if they're present
--include vendor/samsung/vibrantmtd/BoardConfigVendor.mk
-
-TARGET_CPU_ABI := armeabi-v7a
-TARGET_CPU_ABI2 := armeabi
-TARGET_ARCH_VARIANT := armv7-a-neon
-ARCH_ARM_HAVE_TLS_REGISTER := true
-TARGET_GLOBAL_CFLAGS += -mtune=cortex-a8 -mfpu=neon -mfloat-abi=softfp
-TARGET_GLOBAL_CPPFLAGS += -mtune=cortex-a8 -mfpu=neon -mfloat-abi=softfp
-
-TARGET_NO_BOOTLOADER := true
-TARGET_NO_RADIOIMAGE := true
-
-BOARD_MOBILEDATA_INTERFACE_NAME = "pdp0"
-
-TARGET_PROVIDES_INIT := true
-TARGET_BOARD_PLATFORM := s5pv210
-TARGET_BOOTLOADER_BOARD_NAME := aries
-TARGET_RECOVERY_INITRC := device/samsung/aries-common/recovery.rc
-
-# Releasetools
-TARGET_RELEASETOOL_OTA_FROM_TARGET_SCRIPT := ./device/samsung/aries-common/releasetools/aries_ota_from_target_files
-TARGET_RELEASETOOL_IMG_FROM_TARGET_SCRIPT := ./device/samsung/aries-common/releasetools/aries_img_from_target_files
-
-# Camera
-USE_CAMERA_STUB := false
-ifeq ($(USE_CAMERA_STUB),false)
-BOARD_CAMERA_LIBRARIES := libcamera
-endif
-
-#GPS
-#BOARD_USES_GPSSHIM := true
-
-# Bluetooth
-BOARD_HAVE_BLUETOOTH := true
-BOARD_HAVE_BLUETOOTH_BCM := true
-
-# Video Devices
-BOARD_USES_OVERLAY := true
-BOARD_V4L2_DEVICE := /dev/video1
-BOARD_CAMERA_DEVICE := /dev/video0
-#BOARD_SECOND_CAMERA_DEVICE := /dev/video2
-
-BOARD_NAND_PAGE_SIZE := 4096 -s 128
-BOARD_KERNEL_BASE := 0x32000000
-BOARD_KERNEL_PAGESIZE := 4096
-BOARD_KERNEL_CMDLINE := console=ttyFIQ0,115200 init=/init no_console_suspend
+#Prebuilt Kernel
 TARGET_PREBUILT_KERNEL := device/samsung/vibrantmtd/kernel
 
-BOARD_BOOTIMAGE_PARTITION_SIZE := 7864320
-BOARD_SYSTEMIMAGE_PARTITION_SIZE := 196608000
-BOARD_USERDATAIMAGE_PARTITION_SIZE := 2013265920
-BOARD_FLASH_BLOCK_SIZE := 4096
-
-# Connectivity - Wi-Fi
-WPA_SUPPLICANT_VERSION := VER_0_6_X
-BOARD_WPA_SUPPLICANT_DRIVER := WEXT
-BOARD_WLAN_DEVICE := bcm4329
-WIFI_DRIVER_MODULE_PATH     := "/system/lib/modules/bcm4329.ko"
-WIFI_DRIVER_FW_STA_PATH     := "/vendor/firmware/fw_bcm4329.bin"
-WIFI_DRIVER_FW_AP_PATH      := "/vendor/firmware/fw_bcm4329_apsta.bin"
-WIFI_DRIVER_MODULE_NAME     :=  "bcm4329"
-WIFI_DRIVER_MODULE_ARG      :=  "firmware_path=/vendor/firmware/fw_bcm4329.bin nvram_path=/vendor/firmware/nvram_net.txt"
-
-# Vold
-BOARD_VOLD_EMMC_SHARES_DEV_MAJOR := true
-
 # Recovery
-TARGET_USERIMAGES_USE_EXT4 := true
-BOARD_HAS_NO_SELECT_BUTTON := true
-BOARD_USES_BML_OVER_MTD := true
-BOARD_CUSTOM_BOOTIMG_MK := device/samsung/aries-common/shbootimg.mk
-TARGET_RECOVERY_PRE_COMMAND := "echo 1 > /cache/.startrecovery; sync;"
-
-# Include aries specific stuff
--include device/samsung/aries-common/Android.mk
+BOARD_CUSTOM_RECOVERY_KEYMAPPING := ../../device/samsung/vibrantmtd/recovery/recovery_keys.c
 
 TARGET_OTA_ASSERT_DEVICE := vibrant,vibrantmtd,SGH-T959
+
+# Import the aries-common BoardConfigCommon.mk
+include device/samsung/aries-common/BoardConfigCommon.mk

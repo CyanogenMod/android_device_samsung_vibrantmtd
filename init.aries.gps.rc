@@ -1,0 +1,58 @@
+#
+# init rc file for GPS: this is here to allow for devices
+# to provide their own GPS initialization code without
+# conflicting with the default GPS init. (i.e. Vibrant)
+#
+
+# +STE GPS Daemon
+# GPS_CHIPSET_STE_GNS7560 (and GPS_CHIPSET_STE_CG2900 ?)
+service gpsd /system/vendor/bin/gpsd
+    class late_start
+    socket gps seqpacket 0660 gps system
+    user gps
+    group system inet
+    oneshot
+
+on fs
+# +STE GPS Daemon
+# create data/gps for GPS demon
+# GPS_CHIPSET_STE_GNS7560
+    chown gps gps /dev/s3c2410_serial1
+    chmod 660 /dev/s3c2410_serial1
+    mkdir /data/gps 771 gps system
+    chown gps system /data/gps
+    chown gps gps /sys/class/sec/gps/GPS_PWR_EN/value
+    chmod 664 /sys/class/sec/gps/GPS_PWR_EN/value
+    chown gps gps /sys/class/sec/gps/GPS_nRST/value
+    chmod 664 /sys/class/sec/gps/GPS_nRST/value
+# not sure if these are needed or not, but it cant hurt...
+    chown gps gps /data/CGPS_LOG.txt
+    chmod 0770 /data/CGPS_LOG.txt
+    chown gps gps /data/EVENT_LOG.txt
+    chmod 0770 /data/EVENT_LOG.txt
+    chown gps gps /data/GNB_DEBUG.txt
+    chmod 0770 /data/GNB_DEBUG.txt
+    chown gps gps /data/GPS_NV_Data.bin
+    chmod 0770 /data/GPS_NV_Data.bin
+    chown gps gps /data/GPS_UTC_Calib.bin
+    chmod 0770 /data/GPS_UTC_Calib.bin
+    chown gps gps /data/HALGPS_conf.cfg
+    chmod 0770 /data/HALGPS_conf.cfg
+    chown gps gps /data/NAV_DEBUG.txt
+    chmod 0770 /data/NAV_DEBUG.txt
+    chown gps gps /data/NMEA_DEBUG.txt
+    chmod 0770 /data/NMEA_DEBUG.txt
+
+## Manual download of long term orbit data
+service gpslto /system/bin/get-gps-lto
+    user system
+    #group net_raw system
+    group gps system
+    oneshot
+    disabled
+	
+## Try updating LTO whenever gpsd or wifi comes up
+on property:init.svc.wpa_supplicant=running
+    start gpslto
+on property:init.svc.gpsd=running
+    start gpslto
