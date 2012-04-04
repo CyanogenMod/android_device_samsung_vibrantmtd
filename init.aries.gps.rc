@@ -43,16 +43,3 @@ on fs
     chown gps gps /data/NMEA_DEBUG.txt
     chmod 0770 /data/NMEA_DEBUG.txt
 
-## Manual download of long term orbit data
-service gpslto /system/bin/get-gps-lto
-    user system
-    #group net_raw system
-    group gps system
-    oneshot
-    disabled
-	
-## Try updating LTO whenever gpsd or wifi comes up
-on property:init.svc.wpa_supplicant=running
-    start gpslto
-on property:init.svc.gpsd=running
-    start gpslto
