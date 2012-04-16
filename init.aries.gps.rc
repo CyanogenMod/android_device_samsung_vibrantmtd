@@ -4,22 +4,20 @@
 # conflicting with the default GPS init. (i.e. Vibrant)
 #
 
-# +STE GPS Daemon
-# GPS_CHIPSET_STE_GNS7560 (and GPS_CHIPSET_STE_CG2900 ?)
+#
+# GPS_CHIPSET_STE_GNS7560
+#
+
 service gpsd /system/vendor/bin/gpsd
     class late_start
     socket gps seqpacket 0660 gps system
     user gps
     group system inet
-    oneshot
 
-on fs
-# +STE GPS Daemon
-# create data/gps for GPS demon
-# GPS_CHIPSET_STE_GNS7560
+on post-fs-data
     chown gps gps /dev/s3c2410_serial1
     chmod 660 /dev/s3c2410_serial1
-    mkdir /data/gps 771 gps system
+    mkdir /data/gps 775 gps system
     chown gps system /data/gps
     chown gps gps /sys/class/sec/gps/GPS_PWR_EN/value
     chmod 664 /sys/class/sec/gps/GPS_PWR_EN/value
