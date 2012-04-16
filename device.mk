@@ -47,20 +47,6 @@ PRODUCT_COPY_FILES += \
 	device/samsung/vibrantmtd/aries-keypad.kl:system/usr/keylayout/aries-keypad.kl \
 	device/samsung/vibrantmtd/cypress-touchkey.kl:system/usr/keylayout/cypress-touchkey.kl
 
-# kernel modules
-PRODUCT_COPY_FILES += $(foreach module,\
-	$(wildcard device/samsung/vibrantmtd/*.ko),\
-	$(module):system/lib/modules/$(notdir $(module)))
-
-ifeq ($(TARGET_PREBUILT_KERNEL),)
-    LOCAL_KERNEL := device/samsung/vibrantmtd/kernel
-else
-    LOCAL_KERNEL := $(TARGET_PREBUILT_KERNEL)
-endif
-
-PRODUCT_COPY_FILES += \
-    $(LOCAL_KERNEL):kernel
-
 # Inherit Aries common device configuration.
 $(call inherit-product, device/samsung/aries-common/device_base.mk)
 
