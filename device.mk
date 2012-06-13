@@ -50,6 +50,9 @@ PRODUCT_COPY_FILES += \
 	device/samsung/vibrantmtd/aries-keypad.kl:system/usr/keylayout/aries-keypad.kl \
 	device/samsung/vibrantmtd/cypress-touchkey.kl:system/usr/keylayout/cypress-touchkey.kl
 
+PRODUCT_PACKAGES += \
+    gpsd
+
 # Inherit Aries common device configuration.
 $(call inherit-product, device/samsung/aries-common/device_base.mk)
 
