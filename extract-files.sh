@@ -23,7 +23,7 @@ mkdir -p ../../../vendor/$MANUFACTURER/$COMMON/proprietary
 
 # vibrantmtd
 adb pull /system/lib/libclientgps.so ../../../vendor/$MANUFACTURER/$DEVICE/proprietary
-adb pull /system/vendor/bin/gpsd ../../../vendor/$MANUFACTURER/$DEVICE/proprietary
+adb pull /system/vendor/bin/samsung-gpsd ../../../vendor/$MANUFACTURER/$DEVICE/proprietary
 adb pull /system/vendor/lib/hw/gps.aries.so ../../../vendor/$MANUFACTURER/$DEVICE/proprietary
 adb pull /system/etc/gps.conf ../../../vendor/$MANUFACTURER/$DEVICE/proprietary
 adb pull /system/lib/libril.so ../../../vendor/$MANUFACTURER/$DEVICE/proprietary
