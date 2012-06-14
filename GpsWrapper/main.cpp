@@ -25,15 +25,16 @@
 #define GPSD_PATH "/system/vendor/bin/samsung-gpsd"
 
 int main() {
-    int cur = personality(0xFFFFFFFF);
-    char *argv[] = { GPSD_PATH, NULL };
-    if (personality(cur | ADDR_NO_RANDOMIZE) == -1) {
-        LOGE("Failed to set personality! errno=%d", errno);
+    int currentPersonality = personality(0xFFFFFFFF);
+    if (personality(currentPersonality | ADDR_NO_RANDOMIZE) == -1) {
+        LOGE("Failed to turn off ASLR for the GPS daemon! errno=%d", errno);
         return 1;
     }
 
     LOGD("Starting vendor gpsd");
-    execv(GPSD_PATH, argv);
+    execl(GPSD_PATH, GPSD_PATH, (char *) 0);
+
+    // If we made it here, it failed (since exec replaces the running app).
     LOGE("Failed to start gpsd!");
 
     return 1;
