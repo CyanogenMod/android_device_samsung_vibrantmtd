@@ -1,8 +1,11 @@
 #
-# system.prop for smdkc110
+# system.prop for vibrantmtd
 #
 
 rild.libpath=/system/lib/libsec-ril.so
 rild.libargs=-d /dev/ttyS0
 ro.sf.lcd_density=240
 
+# CWM key repeat
+ro.cwm.enable_key_repeat=true
+ro.cwm.repeatable_keys=115,114,139,217
