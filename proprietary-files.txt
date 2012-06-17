@@ -1,0 +1,10 @@
+etc/vendor/samsung-agps/secgps.conf
+vendor/bin/samsung-gpsd
+vendor/lib/hw/gps.aries.so
+lib/libril.so
+lib/libsecril-client.so
+lib/libsec-ril.so
+bin/rild
+vendor/lib/libsensor_yamaha_test.so
+vendor/bin/orientationd
+vendor/bin/geomagneticd
