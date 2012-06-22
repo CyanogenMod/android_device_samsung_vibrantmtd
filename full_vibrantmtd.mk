@@ -12,21 +12,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-#
-# This file is the build configuration for a full Android
-# build for crespo hardware. This cleanly combines a set of
-# device-specific aspects (drivers) with a device-agnostic
-# product configuration (apps).
-#
-
 # Inherit from those products. Most specific first.
 $(call inherit-product, $(SRC_TARGET_DIR)/product/languages_full.mk)
-# This is where we'd set a backup provider if we had one
-#$(call inherit-product, device/sample/products/backup_overlay.mk)
-$(call inherit-product, device/samsung/vibrantmtd/device.mk)
 $(call inherit-product, $(SRC_TARGET_DIR)/product/full.mk)
 
-# Galaxy S uses high-density artwork where available
+# Call our device config
+$(call inherit-product, device/samsung/vibrantmtd/device.mk)
+
+# Vibrant uses high-density artwork where available
 PRODUCT_LOCALES += hdpi
 
 # Discard inherited values and use our own instead.

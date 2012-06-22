@@ -17,12 +17,12 @@ LOCAL_PATH := $(call my-dir)
 ifeq ($(TARGET_DEVICE),vibrantmtd)
 
 include $(CLEAR_VARS)
-LOCAL_SRC_FILES := s3c-keypad.kcm
+LOCAL_SRC_FILES := keys/s3c-keypad.kcm
 LOCAL_MODULE_TAGS := optional
 include $(BUILD_KEY_CHAR_MAP)
 
 include $(CLEAR_VARS)
-LOCAL_SRC_FILES := cypress-touchkey.kcm
+LOCAL_SRC_FILES := keys/cypress-touchkey.kcm
 LOCAL_MODULE_TAGS := optional
 include $(BUILD_KEY_CHAR_MAP)
 
