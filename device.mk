@@ -21,6 +21,7 @@ PRODUCT_COPY_FILES := \
 
 # Init files
 PRODUCT_COPY_FILES += \
+	device/samsung/vibrantmtd/ramdisk/init.aries.rc:root/init.aries.rc \
 	device/samsung/vibrantmtd/ramdisk/init.aries.gps.rc:root/init.aries.gps.rc
 
 # Prebuilt kl keymaps
