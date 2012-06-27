@@ -14,10 +14,12 @@
 
 # Inherit from those products. Most specific first.
 $(call inherit-product, $(SRC_TARGET_DIR)/product/languages_full.mk)
-$(call inherit-product, $(SRC_TARGET_DIR)/product/full.mk)
 
 # Call our device config
 $(call inherit-product, device/samsung/vibrantmtd/device.mk)
+
+# Call the full product config
+$(call inherit-product, $(SRC_TARGET_DIR)/product/full.mk)
 
 # Vibrant uses high-density artwork where available
 PRODUCT_LOCALES += hdpi
