@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-#define LOG_TAG "VibrantGps"
+#define LOG_TAG "noaslr"
 
 #include <stdio.h>
 #include <unistd.h>
@@ -22,20 +22,29 @@
 #include <errno.h>
 #include <sys/personality.h>
 
-#define GPSD_PATH "/system/vendor/bin/samsung-gpsd"
-
-int main() {
+int main(int argc, char *argv[]) {
+    if (argc < 2) {
+        printf("usage: noaslr <executable> [arguments]\n");
+        ALOGE("noaslr called improperly.");
+        return 1;
+    }
+    char *pathToBin = argv[1];
+    
     int currentPersonality = personality(0xFFFFFFFF);
     if (personality(currentPersonality | ADDR_NO_RANDOMIZE) == -1) {
-        LOGE("Failed to turn off ASLR for the GPS daemon! errno=%d", errno);
+        ALOGE("Failed to turn off ASLR for %s! errno=%d", argv[1], errno);
         return 1;
     }
 
-    LOGD("Starting vendor gpsd");
-    execl(GPSD_PATH, GPSD_PATH, (char *) 0);
+    // Prepare arguments for the binary.
+    argv++;
+    argv[0] = pathToBin;
+
+    ALOGD("Starting %s", pathToBin);
+    execv(pathToBin, argv);
 
     // If we made it here, it failed (since exec replaces the running app).
-    LOGE("Failed to start gpsd!");
+    ALOGE("Failed to start %s", pathToBin);
 
     return 1;
 }
