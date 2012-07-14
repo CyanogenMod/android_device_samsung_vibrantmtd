@@ -27,15 +27,15 @@
 int main() {
     int currentPersonality = personality(0xFFFFFFFF);
     if (personality(currentPersonality | ADDR_NO_RANDOMIZE) == -1) {
-        LOGE("Failed to turn off ASLR for the GPS daemon! errno=%d", errno);
+        ALOGE("Failed to turn off ASLR for the GPS daemon! errno=%d", errno);
         return 1;
     }
 
-    LOGD("Starting vendor gpsd");
+    ALOGD("Starting vendor gpsd");
     execl(GPSD_PATH, GPSD_PATH, (char *) 0);
 
     // If we made it here, it failed (since exec replaces the running app).
-    LOGE("Failed to start gpsd!");
+    ALOGE("Failed to start gpsd!");
 
     return 1;
 }
