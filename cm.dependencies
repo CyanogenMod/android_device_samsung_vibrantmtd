@@ -9,7 +9,6 @@
 	},
 	{
 		"repository": "android_kernel_samsung_aries",
-		"target_path": "kernel/samsung/aries",
-		"branch": "android-samsung-3.0-ics"
+		"target_path": "kernel/samsung/aries"
 	}
 ]
