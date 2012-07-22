@@ -92,7 +92,7 @@ on post-fs-data
 
     setprop vold.post_fs_data_done 1
 
-service aries-ril-daemon /system/bin/noaslr /system/bin/rild
+service aries-ril-daemon /system/bin/rild
     class core
     socket rild stream 660 root radio
     socket rild-debug stream 660 radio system
