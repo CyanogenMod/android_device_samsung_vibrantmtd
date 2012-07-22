@@ -30,6 +30,10 @@ PRODUCT_COPY_FILES += \
 PRODUCT_PACKAGES += \
     noaslr
 
+# GPS
+PRODUCT_PACKAGES += \
+    gps.aries
+
 # Inherit common configuration
 $(call inherit-product, device/samsung/aries-common/device_base.mk)
 
