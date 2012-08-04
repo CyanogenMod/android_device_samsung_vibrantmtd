@@ -55,14 +55,12 @@ typedef struct {
 
 /* AGPS RIL */
 typedef struct {
-    agps_ril_request_set_id request_setid;
     agps_ril_request_ref_loc request_refloc;
 } OldAGpsRilCallbacks;
 
 typedef struct {
     void  (*init)( OldAGpsRilCallbacks* callbacks );
     void (*set_ref_location) (const AGpsRefLocation *agps_reflocation, size_t sz_struct);
-    void (*set_set_id) (AGpsSetIDType type, const char* setid);
     void (*ni_message) (uint8_t *msg, size_t len);
 } OldAGpsRilInterface;
 
