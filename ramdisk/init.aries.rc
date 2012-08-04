@@ -212,8 +212,6 @@ service tvout /system/bin/tvoutserver
     class late_start
     user system
     group graphics
-    disabled
-# FIXME (disabled): ABI borked
 
 service tvouthack /system/bin/tvouthack
     user system
