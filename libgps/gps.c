@@ -142,12 +142,6 @@ static void cm_agps_init(AGpsCallbacks * callbacks)
 static OldAGpsRilCallbacks oldAGpsRilCallbacks;
 static const AGpsRilCallbacks* newAGpsRilCallbacks = NULL;
 
-static void agpsril_setid_cb(uint32_t flags)
-{
-    LOGV("AGPSRIL setid callback");
-    newAGpsRilCallbacks->create_thread_cb("gpsshim-agpsril-setid",(void *)newAGpsRilCallbacks->request_setid,&flags);
-}
-
 static void agpsril_refloc_cb(uint32_t flags)
 {
     LOGV("AGPSRIL refloc callback");
@@ -157,7 +151,6 @@ static void agpsril_refloc_cb(uint32_t flags)
 static void cm_agpsril_init(AGpsRilCallbacks * callbacks)
 {
     newAGpsRilCallbacks = callbacks;
-    oldAGpsRilCallbacks.request_setid = agpsril_setid_cb;
     oldAGpsRilCallbacks.request_refloc = agpsril_refloc_cb;
     LOGV("AGPSRIL init");
 
@@ -211,7 +204,6 @@ static const void* cm_get_extension(const char* name)
         newAGPSRIL.size = sizeof(AGpsRilInterface);
         newAGPSRIL.init = cm_agpsril_init;
         newAGPSRIL.set_ref_location = oldAGPSRIL->set_ref_location;
-        newAGPSRIL.set_set_id = oldAGPSRIL->set_set_id;
         newAGPSRIL.ni_message = oldAGPSRIL->ni_message;
         return &newAGPSRIL;
     } else if (strcmp(name, GPS_NI_INTERFACE) == 0 && (oldNI = originalGpsInterface->get_extension(name))) {
