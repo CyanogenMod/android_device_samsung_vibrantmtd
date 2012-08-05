@@ -46,7 +46,7 @@ typedef struct {
 } OldAGpsCallbacks;
 
 typedef struct {
-    void  (*init)( OldAGpsCallbacks* callbacks );
+    void (*init)( OldAGpsCallbacks* callbacks );
     int  (*data_conn_open)( const char* apn );
     int  (*data_conn_closed)();
     int  (*data_conn_failed)();
@@ -54,13 +54,21 @@ typedef struct {
 } OldAGpsInterface;
 
 /* AGPS RIL */
+/** Represents ref locations */
+typedef struct {
+    uint16_t type;
+    uint16_t mcc;
+    uint16_t mnc;
+    uint32_t cid;
+} OldAGpsRefLocation;
+
 typedef struct {
     agps_ril_request_ref_loc request_refloc;
 } OldAGpsRilCallbacks;
 
 typedef struct {
-    void  (*init)( OldAGpsRilCallbacks* callbacks );
-    void (*set_ref_location) (const AGpsRefLocation *agps_reflocation, size_t sz_struct);
+    void (*init)( OldAGpsRilCallbacks* callbacks );
+    void (*set_ref_location) (const OldAGpsRefLocation *agps_reflocation, size_t sz_struct);
     void (*ni_message) (uint8_t *msg, size_t len);
 } OldAGpsRilInterface;
 
