@@ -19,12 +19,12 @@
  * limitations under the License.
  */
 
+#define LOG_NDEBUG 0
+#define LOG_TAG "VibrantGps"
+
 #include <hardware/gps.h>
 
-#define LOG_NDEBUG 0
-
 #include <stdlib.h>
-#define LOG_TAG "gps.aries"
 #include <utils/Log.h>
 #include <dlfcn.h>
 
@@ -148,6 +148,22 @@ static void agpsril_refloc_cb(uint32_t flags)
     newAGpsRilCallbacks->create_thread_cb("gpsshim-agpsril-refloc",(void *)newAGpsRilCallbacks->request_refloc,&flags);
 }
 
+static void agpsril_set_ref_location(const AGpsRefLocation *agps_reflocation, size_t sz_struct) {
+    OldAGpsRefLocation loc;
+    loc.type = agps_reflocation->type;
+    loc.mcc = agps_reflocation->u.cellID.mcc;
+    loc.mnc = agps_reflocation->u.cellID.mnc;
+    loc.cid = agps_reflocation->u.cellID.cid;
+
+    // Just in case...
+    ALOGD("%s: got type=%d, mcc=%d, mnc=%d, cid=%d, sz_struct=%d", __func__,
+            loc.type, loc.mcc,
+            loc.mnc, loc.cid,
+            sz_struct);
+
+    oldAGPSRIL->set_ref_location(&loc, sizeof(OldAGpsRefLocation));
+}
+
 static void cm_agpsril_init(AGpsRilCallbacks * callbacks)
 {
     newAGpsRilCallbacks = callbacks;
@@ -203,7 +219,7 @@ static const void* cm_get_extension(const char* name)
         ALOGD("cm_get_extension: loaded %s", name);
         newAGPSRIL.size = sizeof(AGpsRilInterface);
         newAGPSRIL.init = cm_agpsril_init;
-        newAGPSRIL.set_ref_location = oldAGPSRIL->set_ref_location;
+        newAGPSRIL.set_ref_location = agpsril_set_ref_location;
         newAGPSRIL.ni_message = oldAGPSRIL->ni_message;
         return &newAGPSRIL;
     } else if (strcmp(name, GPS_NI_INTERFACE) == 0 && (oldNI = originalGpsInterface->get_extension(name))) {
