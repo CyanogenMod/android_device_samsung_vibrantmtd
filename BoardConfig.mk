@@ -23,7 +23,11 @@ TARGET_KERNEL_CONFIG := cyanogenmod_vibrantmtd_defconfig
 # Recovery
 BOARD_CUSTOM_RECOVERY_KEYMAPPING := ../../device/samsung/vibrantmtd/recovery/recovery_keys.c
 
+# Bootanimation
 TARGET_BOOTANIMATION_PRELOAD := true
+
+# Headers
+TARGET_SPECIFIC_HEADER_PATH := device/samsung/vibrantmtd/include
 
 TARGET_OTA_ASSERT_DEVICE := vibrant,vibrantmtd,SGH-T959
 
