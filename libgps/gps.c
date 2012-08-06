@@ -43,8 +43,6 @@ static GpsNiInterface newNI;
 static const OldGpsInterface* originalGpsInterface = NULL;
 static GpsInterface newGpsInterface;
 
-
-//extern const OldGpsInterface* gps_get_hardware_interface();
 typedef const OldGpsInterface* (*gps_get_hardware_interface_t)();
 static gps_get_hardware_interface_t get_hardware;
 
@@ -288,6 +286,13 @@ const GpsInterface* cm_get_gps_interface(struct gps_device_t* dev)
     newGpsInterface.get_extension = cm_get_extension;
 
     return &newGpsInterface;
+}
+
+static int close_gps(struct hw_device_t *device)
+{
+    ALOGV("Closing GPS module...");
+    dlclose(lib);
+    return 0;
 }
 
 static int open_gps(const struct hw_module_t* module, char const* name,
