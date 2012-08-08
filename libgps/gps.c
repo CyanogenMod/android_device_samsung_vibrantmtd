@@ -156,7 +156,7 @@ static void agpsril_set_ref_location(const AGpsRefLocation *agps_reflocation, si
     loc.cid = agps_reflocation->u.cellID.cid;
 
     // Just in case...
-    ALOGD("%s: got type=%d, mcc=%d, mnc=%d, cid=%d, sz_struct=%d", __func__,
+    LOGD("%s: got type=%d, mcc=%d, mnc=%d, cid=%d, sz_struct=%d", __func__,
             loc.type, loc.mcc,
             loc.mnc, loc.cid,
             sz_struct);
