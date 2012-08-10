@@ -1,8 +1,8 @@
-/******************************************************************************
- * GPS HAL shim
- * load older GPS libraries on gingerbread (and above?)
+/*
+ * Vibrant GPS Shim (forked off the generic shim by arcee)
  *
- * Copyright 2010-2011 - Ricardo Cerqueira, The CyanogenMod Project
+ * Copyright (C) 2006 Ricardo Cerquiera
+ * Copyright (C) 2012 Daniel Bateman
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,8 +15,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
- ******************************************************************************/
+ */
 
 #include <hardware/gps.h>
 
@@ -137,4 +136,5 @@ typedef struct {
     const void* (*get_extension)(const char* name);
 } OldGpsInterface;
 
+typedef const OldGpsInterface* (*gps_get_hardware_interface_t)();
 

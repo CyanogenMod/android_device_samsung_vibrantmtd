@@ -1,7 +1,5 @@
 /*
- * Vibrant GPS HAL shim
- * 
- * Forked off of arcee's hardware/cm/gps
+ * Vibrant GPS Shim (forked off the generic shim by arcee)
  *
  * Copyright (C) 2006 Ricardo Cerquiera
  * Copyright (C) 2012 Daniel Bateman
@@ -22,13 +20,12 @@
 #define LOG_NDEBUG 0
 #define LOG_TAG "VibrantGps"
 
-#include <hardware/gps.h>
-
 #include <stdlib.h>
 #include <utils/Log.h>
 #include <dlfcn.h>
 
-#include <gpsshim.h>
+#include <hardware/gps.h>
+#include "gps.h"
 
 GpsCallbacks *originalCallbacks;
 static const OldGpsXtraInterface* oldXTRA = NULL;
@@ -43,7 +40,6 @@ static GpsNiInterface newNI;
 static const OldGpsInterface* originalGpsInterface = NULL;
 static GpsInterface newGpsInterface;
 
-typedef const OldGpsInterface* (*gps_get_hardware_interface_t)();
 static gps_get_hardware_interface_t get_hardware;
 
 static void *lib;
@@ -241,11 +237,7 @@ static int cm_init(GpsCallbacks* callbacks) {
     oldCallbacks.status_cb = cm_status_callback;
     oldCallbacks.sv_status_cb = cm_svstatus_callback;
     oldCallbacks.nmea_cb = cm_nmea_callback;
-#ifdef NO_AGPS
-    originalCallbacks->set_capabilities_cb(0);
-#else
     originalCallbacks->set_capabilities_cb(GPS_CAPABILITY_MSB|GPS_CAPABILITY_MSA);
-#endif
     return originalGpsInterface->init(&oldCallbacks);
 }
 
