@@ -18,6 +18,9 @@ on init
     symlink /storage/sdcard1 /mnt/emmc
     # FIXME: Remove emmc?
 
+    # Increase read ahead on moviNAND
+    write /sys/devices/virtual/bdi/179:0/read_ahead_kb 1024
+
     # We will create our own ril-daemon service in class 'core' because the
     # rild doesn't like being killed. (During device encryption.)
     stop ril-daemon
@@ -82,6 +85,13 @@ on post-fs-data
     # wi-fi
     mkdir /data/misc/wifi/sockets 0770 wifi wifi
     mkdir /data/misc/dhcp 0770 dhcp dhcp
+
+    # Dalvik cache on /system to save space
+    mkdir /system/dalvik-cache 0771 system system
+    chown system system /system/dalvik-cache
+    chmod 0771 /system/dalvik-cache
+    exec /system/bin/rm -r /data/dalvik-cache
+    symlink /system/dalvik-cache /data/dalvik-cache
 
     # download cache
     mkdir /data/download 0770 system cache
