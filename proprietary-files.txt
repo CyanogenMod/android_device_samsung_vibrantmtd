@@ -1,4 +1,4 @@
-etc/vendor/samsung-agps/secgps.conf
+etc/gps.conf
 vendor/bin/gpsd
 vendor/lib/libsamsung_hwlegacy.so
 lib/libclientgps.so
