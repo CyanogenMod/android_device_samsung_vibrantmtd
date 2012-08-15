@@ -1,11 +1,16 @@
+# GPS
 etc/gps.conf
 vendor/bin/gpsd
 vendor/lib/libsamsung_hwlegacy.so
 lib/libclientgps.so
+
+# RIL
 lib/libril.so
 lib/libsecril-client.so
 lib/libsec-ril.so
 bin/rild
+
+# Sensors
 vendor/lib/libsensor_yamaha_test.so
 vendor/bin/orientationd
 vendor/bin/geomagneticd
