@@ -10,5 +10,9 @@
 	{
 		"repository": "android_kernel_samsung_aries",
 		"target_path": "kernel/samsung/aries"
+	},
+	{
+		"repository": "android_hardware_samsung",
+		"target_path": "hardware/samsung"
 	}
 ]
