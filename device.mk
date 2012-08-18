@@ -26,10 +26,6 @@ PRODUCT_COPY_FILES += \
 	device/samsung/vibrantmtd/keys/aries-keypad.kl:system/usr/keylayout/aries-keypad.kl \
 	device/samsung/vibrantmtd/keys/cypress-touchkey.kl:system/usr/keylayout/cypress-touchkey.kl
 
-# No ASLR!
-PRODUCT_PACKAGES += \
-    noaslr
-
 # GPS
 PRODUCT_PACKAGES += \
     gps.aries

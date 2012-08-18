@@ -21,6 +21,9 @@ on init
     # Increase read ahead on moviNAND
     write /sys/devices/virtual/bdi/179:0/read_ahead_kb 1024
 
+    # Disable address randomization
+    write /proc/sys/kernel/randomize_va_space 0
+
     # We will create our own ril-daemon service in class 'core' because the
     # rild doesn't like being killed. (During device encryption.)
     stop ril-daemon
@@ -102,7 +105,7 @@ on post-fs-data
 
     setprop vold.post_fs_data_done 1
 
-service aries-ril-daemon /system/bin/noaslr /system/bin/rild
+service aries-ril-daemon /system/bin/rild
     class core
     socket rild stream 660 root radio
     socket rild-debug stream 660 radio system
