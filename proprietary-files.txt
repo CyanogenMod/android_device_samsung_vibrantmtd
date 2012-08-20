@@ -6,9 +6,13 @@ lib/libclientgps.so
 
 # RIL
 lib/libril.so
+lib/librilswitch.so
 lib/libsecril-client.so
 lib/libsec-ril.so
+lib/libganril.so
+lib/libkineto.so
 bin/rild
+app/WiFi-Calling.apk
 
 # Sensors
 vendor/lib/libsensor_yamaha_test.so
