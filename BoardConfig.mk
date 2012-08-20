@@ -23,6 +23,9 @@ TARGET_KERNEL_CONFIG := cyanogenmod_vibrantmtd_defconfig
 # Recovery
 BOARD_CUSTOM_RECOVERY_KEYMAPPING := ../../device/samsung/vibrantmtd/recovery/recovery_keys.c
 
+# Audio
+TARGET_USES_FROYO_RILCLIENT := true
+
 TARGET_OTA_ASSERT_DEVICE := vibrant,vibrantmtd,SGH-T959
 
 # Import the aries-common BoardConfigCommon.mk
