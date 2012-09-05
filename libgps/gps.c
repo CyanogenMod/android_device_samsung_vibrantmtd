@@ -237,7 +237,9 @@ static int cm_init(GpsCallbacks* callbacks) {
     oldCallbacks.status_cb = cm_status_callback;
     oldCallbacks.sv_status_cb = cm_svstatus_callback;
     oldCallbacks.nmea_cb = cm_nmea_callback;
-    originalCallbacks->set_capabilities_cb(GPS_CAPABILITY_MSB|GPS_CAPABILITY_MSA);
+    originalCallbacks->set_capabilities_cb(GPS_CAPABILITY_MSB |
+                                           GPS_CAPABILITY_MSA |
+                                           GPS_CAPABILITY_SINGLE_SHOT);
     return originalGpsInterface->init(&oldCallbacks);
 }
 
