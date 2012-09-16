@@ -68,7 +68,7 @@ typedef struct {
 typedef struct {
     void (*init)( OldAGpsRilCallbacks* callbacks );
     void (*set_ref_location) (const OldAGpsRefLocation *agps_reflocation, size_t sz_struct);
-    void (*ni_message) (uint8_t *msg, size_t len);
+    void (*ni_message) (uint8_t *msg, uint8_t *hmac);
 } OldAGpsRilInterface;
 
 /* NI */
@@ -128,7 +128,7 @@ typedef struct {
     int   (*start)( void );
     int   (*stop)( void );
     void  (*cleanup)( void );
-    int   (*inject_time)(GpsUtcTime time, int64_t timeReference,
+    int   (*inject_time)(GpsUtcTime, int64_t timeReference,
             int uncertainty);
     int  (*inject_location)(double latitude, double longitude, float accuracy);
     void  (*delete_aiding_data)(GpsAidingData flags);

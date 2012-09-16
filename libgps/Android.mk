@@ -4,7 +4,8 @@ include $(CLEAR_VARS)
 
 LOCAL_MODULE_TAGS := optional
 LOCAL_MODULE := gps.$(TARGET_BOOTLOADER_BOARD_NAME)
-LOCAL_SHARED_LIBRARIES := liblog libdl
+LOCAL_SHARED_LIBRARIES := liblog libdl libcrypto
+LOCAL_C_INCLUDES += external/openssl/include
 LOCAL_SRC_FILES := gps.c
 LOCAL_CFLAGS += -fno-short-enums
 #LOCAL_CFLAGS += -DNEEDS_INITIAL_XTRA
