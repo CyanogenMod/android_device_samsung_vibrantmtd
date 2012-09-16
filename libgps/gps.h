@@ -68,7 +68,7 @@ typedef struct {
 typedef struct {
     void (*init)( OldAGpsRilCallbacks* callbacks );
     void (*set_ref_location) (const OldAGpsRefLocation *agps_reflocation, size_t sz_struct);
-    void (*ni_message) (uint8_t *msg, size_t len);
+    void (*ni_message) (uint8_t *msg, uint8_t *hmac);
 } OldAGpsRilInterface;
 
 /* NI */
