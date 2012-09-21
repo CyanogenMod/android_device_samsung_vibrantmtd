@@ -223,8 +223,8 @@ static void agpsril_ni_message(uint8_t *msg, size_t len)
     unsigned char *hmac_result;
     ALOGD("%s: suplHost=%s", __func__, suplHost);
 
-    hmac_result = HMAC(EVP_sha1(), suplHost, strlen(suplHost), msg, len,
-            NULL, NULL);
+    hmac_result = HMAC(EVP_sha1(), suplHost, suplHost ? strlen(suplHost) : 0,
+            msg, len, NULL, NULL);
 
     if (hmac_result == NULL) {
         ALOGE("%s: HMAC computation failed!", __func__);
@@ -373,7 +373,7 @@ static void cleanup()
 static int inject_time(GpsUtcTime timestamp, int64_t timeReference, int uncertainty)
 {
     // Not used?
-    ALOGD("%s: enter %llu, %llu, %d", timestamp, timeReference, uncertainty);
+    ALOGD("%s: enter %llu, %llu, %d", __func__, timestamp, timeReference, uncertainty);
     int ret = originalGpsInterface->inject_time(timestamp, timeReference, uncertainty);
     ALOGD("%s: exit", __func__);
     return ret;
