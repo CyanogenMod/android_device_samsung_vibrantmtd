@@ -169,7 +169,7 @@ static int agps_data_conn_open(const char* apn)
     int ret;
     ALOGD("%s: enter %s", __func__, apn);
     ret = oldAGPS->data_conn_open(apn);
-    ALOGD("%: exit ret=%d", __func__, ret);
+    ALOGD("%s: exit ret=%d", __func__, ret);
     return ret;
 }
 
@@ -178,7 +178,7 @@ static int agps_data_conn_closed()
     int ret;
     ALOGD("%s: enter", __func__);
     ret = oldAGPS->data_conn_closed();
-    ALOGD("%: exit ret=%d", __func__, ret);
+    ALOGD("%s: exit ret=%d", __func__, ret);
     return ret;
 }
 
@@ -187,7 +187,7 @@ static int agps_data_conn_failed()
     int ret;
     ALOGD("%s: enter", __func__);
     ret = oldAGPS->data_conn_failed();
-    ALOGD("%: exit ret=%d", __func__, ret);
+    ALOGD("%s: exit ret=%d", __func__, ret);
     return ret;
 }
 
