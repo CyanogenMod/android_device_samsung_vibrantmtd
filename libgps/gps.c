@@ -101,11 +101,11 @@ static void svstatus_callback(OldGpsSvStatus *sv_info)
             (void *) originalCallbacks->sv_status_cb, (void *) &newSvStatus);
 }
 
-struct NmeaData {
+typedef struct {
     GpsUtcTime timestamp;
     const char *nmea;
     int length;
-}
+} NmeaData;
 
 static void nmea_thread(NmeaData *data)
 {
