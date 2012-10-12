@@ -31,8 +31,6 @@
 #include "gps.h"
 
 static GpsCallbacks *originalCallbacks;
-static const OldGpsXtraInterface* oldXTRA = NULL;
-static GpsXtraInterface newXTRA;
 static const OldAGpsInterface* oldAGPS = NULL;
 static AGpsInterface newAGPS;
 static const OldAGpsRilInterface* oldAGPSRIL = NULL;
@@ -50,9 +48,9 @@ static void *hal;
 // used for agpsril_ni_message
 static const char *suplHost = NULL;
 
-static void location_callback(OldGpsLocation *location) {
+static void location_callback(OldGpsLocation *location)
+{
     static GpsLocation newLocation;
-    ALOGV("I have a location");
     newLocation.size = sizeof(GpsLocation);
     newLocation.flags = location->flags;
     newLocation.latitude = location->latitude;
@@ -62,50 +60,67 @@ static void location_callback(OldGpsLocation *location) {
     newLocation.bearing = location->bearing;
     newLocation.accuracy = location->accuracy;
     newLocation.timestamp = location->timestamp;
+
+    ALOGV("I have a location");
+
     originalCallbacks->create_thread_cb("gpsshim-location",(void *)originalCallbacks->location_cb,(void *)&newLocation);
 }
 
-static void status_callback(OldGpsStatus *status) {
+static void status_callback(OldGpsStatus *status)
+{
     static GpsStatus newStatus;
     newStatus.size = sizeof(GpsStatus);
-    ALOGV("Status value is %u",status->status);
     newStatus.status = status->status;
+
+    ALOGV("Status value is %u",status->status);
     originalCallbacks->create_thread_cb("gpsshim-status",(void *)originalCallbacks->status_cb,(void *)&newStatus);
 }
 
-static void svstatus_callback(OldGpsSvStatus *sv_info) {
+static void svstatus_callback(OldGpsSvStatus *sv_info)
+{
     static GpsSvStatus newSvStatus;
-    int i=0;
+    int i;
     ALOGV("I have a svstatus");
+
     newSvStatus.size = sizeof(GpsSvStatus);
     newSvStatus.num_svs = sv_info->num_svs;
-    for (i=0; i<newSvStatus.num_svs; i++) {
+
+    for (i = 0; i < newSvStatus.num_svs; ++i) {
         newSvStatus.sv_list[i].size = sizeof(GpsSvInfo);
         newSvStatus.sv_list[i].prn = sv_info->sv_list[i].prn;
         newSvStatus.sv_list[i].snr = sv_info->sv_list[i].snr;
         newSvStatus.sv_list[i].elevation = sv_info->sv_list[i].elevation;
         newSvStatus.sv_list[i].azimuth = sv_info->sv_list[i].azimuth;
     }
+
     newSvStatus.ephemeris_mask = sv_info->ephemeris_mask;
     newSvStatus.almanac_mask = sv_info->almanac_mask;
     newSvStatus.used_in_fix_mask = sv_info->used_in_fix_mask;
-    originalCallbacks->create_thread_cb("gpsshim-svstatus",(void *)originalCallbacks->sv_status_cb,(void *)&newSvStatus);
+
+    originalCallbacks->create_thread_cb("gpsshim-svstatus",
+            (void *) originalCallbacks->sv_status_cb, (void *) &newSvStatus);
 }
 
-GpsUtcTime nmeasave_timestamp;
-const char* nmeasave_nmea;
-int nmeasave_length;
-
-static void nmea_thread(void *unused) {
-    originalCallbacks->nmea_cb(nmeasave_timestamp, nmeasave_nmea, nmeasave_length);
+struct NmeaData {
+    GpsUtcTime timestamp;
+    const char *nmea;
+    int length;
 }
 
-static void nmea_callback(GpsUtcTime timestamp, const char* nmea, int length) {
-    nmeasave_timestamp = timestamp;
-    nmeasave_nmea = nmea;
-    nmeasave_length = length;
+static void nmea_thread(NmeaData *data)
+{
+    originalCallbacks->nmea_cb(data->timestamp, data->nmea, data->length);
+}
 
-    originalCallbacks->create_thread_cb("gpsshim-nmea", (void *)nmea_thread,NULL);
+static void nmea_callback(GpsUtcTime timestamp, const char* nmea, int length)
+{
+    NmeaData data;
+    data.timestamp = timestamp;
+    data.nmea = nmea;
+    data.length = length;
+
+    originalCallbacks->create_thread_cb("gpsshim-nmea", (void *) nmea_thread,
+            (void *) &data);
 }
 
 /*
@@ -121,7 +136,10 @@ static void agps_status_cb(OldAGpsStatus* status)
     newAGpsStatus.size = sizeof(AGpsStatus);
     newAGpsStatus.type = status->type;
     newAGpsStatus.status = status->status;
+
+    ALOGD("%s: type=%d, status=%d", __func__, status->type, status->status);
     newAGpsCallbacks->create_thread_cb("gpsshim-agpsstatus",(void *)newAGpsCallbacks->status_cb,(void*)&newAGpsStatus);
+    ALOGD("%s: exit", __func__);
 }
 
 static void agps_init(AGpsCallbacks * callbacks)
@@ -134,37 +152,42 @@ static void agps_init(AGpsCallbacks * callbacks)
 
 static int agps_set_server(AGpsType type, const char* hostname, int port)
 {
-    ALOGD("%s: %s:%d", __func__, hostname, port);
-    if (type == AGPS_TYPE_SUPL) {
+    int ret;
+
+    if (type == AGPS_TYPE_SUPL)
         suplHost = hostname;
-    }
-    ALOGD("%s: enter", __func__);
-    int ret = oldAGPS->set_server(type, hostname, port);
-    ALOGD("%s: exit", __func__);
+
+    ALOGD("%s: enter hostname=%s, port=%d", __func__, hostname, port);
+    ret = oldAGPS->set_server(type, hostname, port);
+    ALOGD("%s: exit ret=%d", __func__, ret);
+
     return ret;
 }
 
 static int agps_data_conn_open(const char* apn)
 {
+    int ret;
     ALOGD("%s: enter %s", __func__, apn);
-    int ret = oldAGPS->data_conn_open(apn);
-    ALOGD("%: exit", __func__);
+    ret = oldAGPS->data_conn_open(apn);
+    ALOGD("%: exit ret=%d", __func__, ret);
     return ret;
 }
 
 static int agps_data_conn_closed()
 {
+    int ret;
     ALOGD("%s: enter", __func__);
-    int ret = oldAGPS->data_conn_closed();
-    ALOGD("%: exit", __func__);
+    ret = oldAGPS->data_conn_closed();
+    ALOGD("%: exit ret=%d", __func__, ret);
     return ret;
 }
 
 static int agps_data_conn_failed()
 {
+    int ret;
     ALOGD("%s: enter", __func__);
-    int ret = oldAGPS->data_conn_failed();
-    ALOGD("%: exit", __func__);
+    ret = oldAGPS->data_conn_failed();
+    ALOGD("%: exit ret=%d", __func__, ret);
     return ret;
 }
 
@@ -183,7 +206,9 @@ static void agpsril_refloc_cb(uint32_t flags)
     ALOGD("%s: exit", __func__);
 }
 
-static void agpsril_set_ref_location(const AGpsRefLocation *agps_reflocation, size_t sz_struct) {
+static void agpsril_set_ref_location(const AGpsRefLocation *agps_reflocation,
+        size_t sz_struct)
+{
     OldAGpsRefLocation loc;
     loc.type = agps_reflocation->type;
     loc.mcc = agps_reflocation->u.cellID.mcc;
@@ -237,35 +262,6 @@ static void agpsril_ni_message(uint8_t *msg, size_t len)
 }
 
 /*
- * XTRA
- */
-
-static OldGpsXtraCallbacks oldXtraCallbacks;
-static const GpsXtraCallbacks* newXtraCallbacks = NULL;
-
-static void xtra_download_cb()
-{
-    ALOGD("%s: enter", __func__);
-    newXtraCallbacks->create_thread_cb("gpsshim-xtradownload",(void *)newXtraCallbacks->download_request_cb,NULL);
-    ALOGD("%s: exit", __func__);
-}
-
-static int xtra_init(GpsXtraCallbacks * callbacks)
-{
-    newXtraCallbacks = callbacks;
-    oldXtraCallbacks.download_request_cb = xtra_download_cb;
-
-#ifdef NEEDS_INITIAL_XTRA
-    xtra_download_cb();
-#endif
-
-    ALOGD("%s: enter", __func__);
-    int ret = oldXTRA->init(&oldXtraCallbacks);
-    ALOGD("%s: exit", __func__);
-    return ret;
-}
-
-/*
  * NI
  */
 
@@ -285,45 +281,46 @@ static void ni_respond(int notif_id, GpsUserResponseType user_response)
 
 static const void* get_extension(const char* name)
 {
-    ALOGD("get_extension: getting %s", name);
-    if (!strcmp(name, GPS_XTRA_INTERFACE) && (oldXTRA = originalGpsInterface->get_extension(name))) {
-        ALOGD("get_extension: loaded %s", name);
-        newXTRA.size = sizeof(GpsXtraInterface);
-        newXTRA.init = xtra_init;
-        newXTRA.inject_xtra_data = oldXTRA->inject_xtra_data;
-        return &newXTRA;
-    } else if (!strcmp(name, AGPS_INTERFACE) && (oldAGPS = originalGpsInterface->get_extension(name))) {
-        ALOGD("get_extension: loaded %s", name);
+    void *mod;
+    ALOGD("%s: trying to load %s", __func__, name);
+
+    if (!strcmp(name, AGPS_INTERFACE) && (oldAGPS = originalGpsInterface->get_extension(name))) {
         newAGPS.size = sizeof(AGpsInterface);
         newAGPS.init = agps_init;
         newAGPS.data_conn_open = agps_data_conn_open;
         newAGPS.data_conn_closed = agps_data_conn_closed;
         newAGPS.data_conn_failed = agps_data_conn_failed;
         newAGPS.set_server = agps_set_server;
-        return &newAGPS;
+        mod = &newAGPS;
     } else if (!strcmp(name, AGPS_RIL_INTERFACE) && (oldAGPSRIL = originalGpsInterface->get_extension(name))) {
-        ALOGD("get_extension: loaded %s", name);
         newAGPSRIL.size = sizeof(AGpsRilInterface);
         newAGPSRIL.init = agpsril_init;
         newAGPSRIL.set_ref_location = agpsril_set_ref_location;
         newAGPSRIL.ni_message = agpsril_ni_message;
-        return &newAGPSRIL;
+        mod = &newAGPSRIL;
     } else if (strcmp(name, GPS_NI_INTERFACE) == 0 && (oldNI = originalGpsInterface->get_extension(name))) {
-        ALOGD("get_extension: loaded %s", name);
         newNI.size = sizeof(GpsNiInterface);
         newNI.init = ni_init;
         newNI.respond = ni_respond;
-        return &newNI;
+        mod = &newNI;
     }
 
-    ALOGD("get_extension: did not load %s", name);
-    return NULL;
+    if (!mod) {
+        if (originalGpsInterface->get_extension(name))
+            ALOGE("%s: original GPS interface could load %s!", __func__);
+        return NULL;
+    }
+
+    ALOGD("%s: loaded", __func__);
+
+    return mod;
 }
 
-static int init(GpsCallbacks* callbacks) {
+static int init(GpsCallbacks* callbacks)
+{
+    static OldGpsCallbacks oldCallbacks;
     ALOGV("init_wrapper was called");
 
-    static OldGpsCallbacks oldCallbacks;
     originalCallbacks = callbacks;
     oldCallbacks.location_cb = location_callback;
     oldCallbacks.status_cb = status_callback;
@@ -339,27 +336,39 @@ static int init(GpsCallbacks* callbacks) {
 static int set_position_mode(GpsPositionMode mode, GpsPositionRecurrence recurrence,
         uint32_t min_interval, uint32_t preferred_accuracy, uint32_t preferred_time)
 {
-    ALOGD("%s: enter", __func__);
-    int ret = originalGpsInterface->set_position_mode(mode, recurrence ? 0 : (min_interval/1000));
-    ALOGD("%s: exit", __func__);
+    int ret, freq;
+    freq = recurrence ? 0 : (min_interval / 1000);
+
+    ALOGD("%s: enter freq=%d", __func__, freq);
+    ret = originalGpsInterface->set_position_mode(mode, freq);
+    ALOGD("%s: exit ret=%d", __func__, ret);
+
     return ret;
 }
 
 static int stop()
 {
+    int ret;
+
     ALOGD("%s: enter", __func__);
-    int ret = originalGpsInterface->stop();
-    ALOGD("%s: exit", __func__);
+    ret = originalGpsInterface->stop();
+    ALOGD("%s: exit ret=%d", __func__, ret);
+
     originalCallbacks->release_wakelock_cb();
+
     return ret;
 }
 
 static int start()
 {
+    int ret;
+
     originalCallbacks->acquire_wakelock_cb();
+
     ALOGD("%s: enter", __func__);
-    int ret = originalGpsInterface->start();
-    ALOGD("%s: exit", __func__);
+    ret = originalGpsInterface->start();
+    ALOGD("%s: exit ret=%d", __func__, ret);
+
     return ret;
 }
 
@@ -370,21 +379,27 @@ static void cleanup()
     ALOGD("%s: exit", __func__);
 }
 
+// Not used?
 static int inject_time(GpsUtcTime timestamp, int64_t timeReference, int uncertainty)
 {
-    // Not used?
+    int ret;
+
     ALOGD("%s: enter %llu, %llu, %d", __func__, timestamp, timeReference, uncertainty);
-    int ret = originalGpsInterface->inject_time(timestamp, timeReference, uncertainty);
-    ALOGD("%s: exit", __func__);
+    ret = originalGpsInterface->inject_time(timestamp, timeReference, uncertainty);
+    ALOGD("%s: exit ret=%d", __func__, ret);
+
     return ret;
 }
 
+// Not used?
 static int inject_location(double latitude, double longitude, float accuracy)
 {
-    // Not used?
+    int ret;
+
     ALOGD("%s: enter %Lf %Lf %f", __func__, latitude, longitude, accuracy);
-    int ret = originalGpsInterface->inject_location(latitude, longitude, accuracy);
-    ALOGD("%s: exit", __func__);
+    ret = originalGpsInterface->inject_location(latitude, longitude, accuracy);
+    ALOGD("%s: exit ret=%d", __func__, ret);
+
     return ret;
 }
 
