@@ -114,7 +114,7 @@ static void nmea_thread(NmeaData *data)
 
 static void nmea_callback(GpsUtcTime timestamp, const char* nmea, int length)
 {
-    NmeaData data;
+    static NmeaData data;
     data.timestamp = timestamp;
     data.nmea = nmea;
     data.length = length;
@@ -132,8 +132,8 @@ static const AGpsCallbacks* newAGpsCallbacks = NULL;
 
 static void agps_status_cb(OldAGpsStatus* status)
 {
-    AGpsStatus newAGpsStatus;
-    newAGpsStatus.size = sizeof(AGpsStatus);
+    static AGpsStatus newAGpsStatus;
+    newAGpsStatus.size = sizeof(AGpsStatus) - sizeof(uint32_t);
     newAGpsStatus.type = status->type;
     newAGpsStatus.status = status->status;
 
