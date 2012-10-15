@@ -7,7 +7,7 @@
 # ST-Ericsson GNS7560
 service gpsd /system/vendor/bin/gpsd
     class late_start
-    user gps
+    user root
     group system inet
     oneshot
 
