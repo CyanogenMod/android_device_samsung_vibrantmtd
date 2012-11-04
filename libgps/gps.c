@@ -285,6 +285,7 @@ static const void* get_extension(const char* name)
     ALOGD("%s: trying to load %s", __func__, name);
 
     if (!strcmp(name, AGPS_INTERFACE) && (oldAGPS = originalGpsInterface->get_extension(name))) {
+#if 0
         newAGPS.size = sizeof(AGpsInterface);
         newAGPS.init = agps_init;
         newAGPS.data_conn_open = agps_data_conn_open;
@@ -292,6 +293,7 @@ static const void* get_extension(const char* name)
         newAGPS.data_conn_failed = agps_data_conn_failed;
         newAGPS.set_server = agps_set_server;
         mod = &newAGPS;
+#endif
     } else if (!strcmp(name, AGPS_RIL_INTERFACE) && (oldAGPSRIL = originalGpsInterface->get_extension(name))) {
         newAGPSRIL.size = sizeof(AGpsRilInterface);
         newAGPSRIL.init = agpsril_init;
