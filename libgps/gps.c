@@ -209,7 +209,7 @@ static void agpsril_refloc_cb(uint32_t flags)
 static void agpsril_set_ref_location(const AGpsRefLocation *agps_reflocation,
         size_t sz_struct)
 {
-    OldAGpsRefLocation loc;
+    static OldAGpsRefLocation loc;
     loc.type = agps_reflocation->type;
     loc.mcc = agps_reflocation->u.cellID.mcc;
     loc.mnc = agps_reflocation->u.cellID.mnc;
