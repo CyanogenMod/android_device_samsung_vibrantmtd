@@ -1,0 +1,9 @@
+on init
+# Disable address randomization
+    write /proc/sys/kernel/randomize_va_space 0
+
+# Delay the RIL boot till bootanim has started.
+    stop aries-ril-daemon
+
+on property:init.svc.bootanim=running
+    start aries-ril-daemon
