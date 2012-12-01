@@ -6,15 +6,12 @@
 
 # ST-Ericsson GNS7560
 service gpsd /system/vendor/bin/gpsd
-    class late_start
+    class core
     user root
     group system inet
     oneshot
 
 on post-fs-data
-    mkdir /data/gps 775 gps system
-    chown gps system /data/gps
-    chown gps gps /sys/class/sec/gps/GPS_PWR_EN/value
-    chmod 664 /sys/class/sec/gps/GPS_PWR_EN/value
-    chown gps gps /sys/class/sec/gps/GPS_nRST/value
-    chmod 664 /sys/class/sec/gps/GPS_nRST/value
+    mkdir /data/gps
+    chown system /data/gps
+    chmod 771 /data/gps
