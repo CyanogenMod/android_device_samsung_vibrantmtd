@@ -26,6 +26,9 @@ BOARD_CUSTOM_RECOVERY_KEYMAPPING := ../../device/samsung/vibrantmtd/recovery/rec
 # Telephony
 BOARD_USES_FROYO_RILCLIENT := true
 
+# Bluetooth
+BOARD_BLUETOOTH_BDROID_BUILDCFG_INCLUDE_DIR := device/samsung/vibrantmtd/bluetooth
+
 TARGET_OTA_ASSERT_DEVICE := vibrant,vibrantmtd,SGH-T959
 
 # Import the aries-common BoardConfigCommon.mk
