@@ -1,0 +1,8 @@
+Change-Id: I9b14f8336434470b5105654a5c396e9f58d76591
+Code-Review+2: Daniel Bateman <faultexception@cyanogenmod.org>
+Verified+1: Daniel Bateman <faultexception@cyanogenmod.org>
+Submitted-by: Daniel Bateman <faultexception@cyanogenmod.org>
+Submitted-at: Mon, 10 Dec 2012 20:16:12 -0800
+Reviewed-on: http://review.cyanogenmod.org/28049
+Project: CyanogenMod/android_device_samsung_vibrantmtd
+Branch: refs/heads/mr1-staging
