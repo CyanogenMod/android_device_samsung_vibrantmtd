@@ -27,14 +27,10 @@ PRODUCT_COPY_FILES += \\
 EOF
 
 LINEEND=" \\"
-COUNT=`cat proprietary-files.txt | grep -v ^# | grep -v ^$ | wc -l | awk {'print $1'}`
 for FILE in `cat proprietary-files.txt | grep -v ^# | grep -v ^$`; do
-    COUNT=`expr $COUNT - 1`
-    if [ $COUNT = "0" ]; then
-        LINEEND=""
-    fi
     echo "    $OUTDIR/proprietary/$FILE:system/$FILE$LINEEND" >> ../../../$OUTDIR/$DEVICE-vendor-blobs.mk
 done
+echo "    $OUTDIR/proprietary/modem.bin:modem.bin" >> ../../../$OUTDIR/$DEVICE-vendor-blobs.mk
 
 (cat << EOF) > ../../../$OUTDIR/$DEVICE-vendor.mk
 # Copyright (C) 2010 The Android Open Source Project
