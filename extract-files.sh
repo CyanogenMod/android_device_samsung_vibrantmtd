@@ -51,7 +51,7 @@ adb pull /system/vendor/lib/libpvrANDROID_WSEGL.so ../../../vendor/$MANUFACTURER
 adb pull /system/vendor/lib/libPVRScopeServices.so ../../../vendor/$MANUFACTURER/$COMMON/proprietary
 adb pull /system/vendor/lib/libsrv_init.so ../../../vendor/$MANUFACTURER/$COMMON/proprietary
 adb pull /system/vendor/lib/libsrv_um.so ../../../vendor/$MANUFACTURER/$COMMON/proprietary
-adb pull /system/vendor/firmware/CE147F02.bin ../../../vendor/$MANUFACTURER/$COMMON/proprietary
+adb pull /system/vendor/firmware/CE147F02.bin ../../../vendor/$MANUFACTURER/$COMMON/proprietary/svf_CE147F02.bin
 adb pull /system/vendor/lib/libusc.so ../../../vendor/$MANUFACTURER/$COMMON/proprietary
 adb pull /system/vendor/lib/libsensor_yamaha_test.so ../../../vendor/$MANUFACTURER/$COMMON/proprietary
 adb pull /system/vendor/lib/libsensorservice.so ../../../vendor/$MANUFACTURER/$COMMON/proprietary
@@ -177,10 +177,10 @@ PRODUCT_COPY_FILES += \\
     vendor/__MANUFACTURER__/__COMMON__/proprietary/libPVRScopeServices.so:system/vendor/lib/libPVRScopeServices.so \\
     vendor/__MANUFACTURER__/__COMMON__/proprietary/libsrv_init.so:system/vendor/lib/libsrv_init.so \\
     vendor/__MANUFACTURER__/__COMMON__/proprietary/libsrv_um.so:system/vendor/lib/libsrv_um.so \\
-    vendor/__MANUFACTURER__/__COMMON__/proprietary/CE147F02.bin:system/vendor/firmware/CE147F02.bin \\
+    vendor/__MANUFACTURER__/__COMMON__/proprietary/svf_CE147F02.bin:system/vendor/firmware/CE147F02.bin \\
     vendor/__MANUFACTURER__/__COMMON__/proprietary/libusc.so:system/vendor/lib/libusc.so
 
-# fascinatemtd uses older sensor drivers
+# vibrantmtd uses older sensor drivers
 ifndef TARGET_USES_OLD_LIBSENSORS_HAL
 PRODUCT_COPY_FILES += \\
     vendor/__MANUFACTURER__/__COMMON__/proprietary/libsensor_yamaha_test.so:system/vendor/lib/libsensor_yamaha_test.so \\
