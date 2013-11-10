@@ -281,7 +281,7 @@ static void ni_respond(int notif_id, GpsUserResponseType user_response)
 
 static const void* get_extension(const char* name)
 {
-    void *mod;
+    void *mod = NULL;
     ALOGD("%s: trying to load %s", __func__, name);
 
     if (!strcmp(name, AGPS_INTERFACE) && (oldAGPS = originalGpsInterface->get_extension(name))) {
